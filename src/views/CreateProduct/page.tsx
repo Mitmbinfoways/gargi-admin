@@ -3,7 +3,6 @@ import { Button, Label, Textarea, TextInput, Checkbox, Select } from 'flowbite-r
 import ImageUpload from 'src/components/ImageUpload';
 import { createProduct, getProductById, UpdateProduct } from 'src/AxiosConfig/AxiosConfig';
 import { useLocation, useNavigate } from 'react-router';
-import { set } from 'lodash';
 
 interface ProductFormData {
   name: string;
@@ -20,17 +19,7 @@ interface ProductFormData {
   images: File[];
 }
 
-interface ProductFormProps {
-  onSubmit?: (
-    data: Omit<ProductFormData, 'pricePerPack' | 'quantityPerPack'> & {
-      pricePerPack: number;
-      quantityPerPack: number;
-    },
-  ) => void | Promise<void>;
-  isSubmitting?: boolean;
-}
-
-function Page({ isSubmitting = false }: ProductFormProps) {
+function Page() {
   const [formData, setFormData] = useState<ProductFormData>({
     name: '',
     category: '',
@@ -222,11 +211,12 @@ function Page({ isSubmitting = false }: ProductFormProps) {
                 <option value="Spoons">Spoons</option>
                 <option value="Forks">Forks</option>
                 <option value="Knives">Knives</option>
+                <option value="Containers">Containers</option>
                 <option value="Cups">Cups</option>
                 <option value="Trays">Trays</option>
                 <option value="Straws">Straws</option>
-                <option value="Napkins & Tissues">Napkins & Tissues</option>
-                <option value="Containers">Containers</option>
+                <option value="NapkinsAndTissues">Napkins & Tissues</option>
+                <option value="PartyPackAndCombos">Party Pack & Combos</option>
               </Select>
               {errors.category && <p className="text-red-600 mt-1 text-sm">{errors.category}</p>}
             </div>

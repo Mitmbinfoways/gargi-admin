@@ -33,14 +33,14 @@ const AuthLogin = () => {
       setIsLoading(true);
       const trimmedEmail = email.trim();
       const trimmedPassword = password.trim();
-      const response = await Login({ email: trimmedEmail, password: trimmedPassword });
+      const response = await Login({ email: trimmedEmail.toLocaleLowerCase(), password: trimmedPassword });
       const { token, admin } = response.data.data;
       dispatch(login(response.data.data));
       sessionStorage.setItem('token', token);
       sessionStorage.setItem('admin', JSON.stringify(admin));
       navigate('/');
     } catch (error: any) {
-      setErrorMsg('Incorrect userId or password. Please try again.');
+      setErrorMsg('Incorrect email or password. Please try again.');
     } finally {
       setIsLoading(false);
     }

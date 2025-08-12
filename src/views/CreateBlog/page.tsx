@@ -4,11 +4,13 @@ import { FaPlus, FaTrash, FaTimes, FaImage } from "react-icons/fa";
 import { Button, Label, Textarea, TextInput } from "flowbite-react";
 import ImageUpload from "src/components/ImageUpload";
 import { createBlog, getBlogById, UpdateBlogs } from "src/AxiosConfig/AxiosConfig";
-import { useLocation } from "react-router";
+import { useLocation, useNavigate } from "react-router";
+import Spinner from "../spinner/Spinner";
 
 function Page() {
   const location = useLocation();
   const id = location.state?.id;
+  const [loading, setLoading] = useState(false);
   const [selectedImages, setSelectedImages] = useState<(File | string)[]>([]);
   const [imagePreviews, setImagePreviews] = useState<string[]>([]);
   const [contentBlockImages, setContentBlockImages] = useState<{
@@ -22,6 +24,8 @@ function Page() {
       content: [{ icon: "", title: "", description: "" }],
     },
   });
+
+  const navigate = useNavigate()
 
   const {
     register,
@@ -37,6 +41,7 @@ function Page() {
   });
 
   const fetchData = async () => {
+    setLoading(true);
     try {
       const res = await getBlogById(id);
       const blog = res.data.data;
@@ -53,6 +58,8 @@ function Page() {
       setImagePreviews(blog.images || []);
     } catch (error) {
       console.error("Error loading blog data:", error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -102,6 +109,7 @@ function Page() {
   };
 
   const onSubmit = async (values: any) => {
+    setLoading(true);
     try {
       const data = {
         title: values.title,
@@ -118,10 +126,22 @@ function Page() {
       setSelectedImages([]);
       setImagePreviews([]);
       setContentBlockImages({});
+      navigate("/blogs")
     } catch (err) {
       console.error("Error submitting blog:", err);
+    } finally {
+      setLoading(false);
     }
   };
+
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center min-h-screen">
+        <Spinner />
+      </div>
+    );
+  }
+
 
   return (
     <div className="bg-white p-6 rounded-lg shadow-md">
@@ -129,7 +149,6 @@ function Page() {
         {id ? "Edit Blog" : "Create New Blog"}
       </h1>
       <form className="space-y-8" onSubmit={handleSubmit(onSubmit)}>
-        {/* Main images and title/description */}
         <div className="grid grid-cols-1 lg:grid-cols-2 items-end gap-8">
           <div>
             <Label className="mb-2 block text-base font-semibold">Images</Label>
@@ -250,8 +269,6 @@ function Page() {
                   {...register(`content.${index}.description` as const)}
                 />
               </div>
-
-              {/* Remove block button */}
               {fields.length > 1 && (
                 <div className="flex justify-end">
                   <Button
