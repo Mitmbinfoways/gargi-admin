@@ -2,7 +2,6 @@ import { lazy } from 'react';
 import { Navigate, createBrowserRouter } from 'react-router';
 import Loadable from 'src/layouts/full/shared/loadable/Loadable';
 import Profile from 'src/views/Profile/page';
-import ForgotPassword from 'src/views/auth/authforms/ForgotPassword';
 import Dashboard from 'src/views/Dashboard/page';
 import CreateProduct from 'src/views/CreateProduct/page';
 import Product from 'src/views/ProductList/page';
@@ -14,6 +13,7 @@ const FullLayout = Loadable(lazy(() => import('../layouts/full/FullLayout')));
 const BlankLayout = Loadable(lazy(() => import('../layouts/blank/BlankLayout')));
 const Login = Loadable(lazy(() => import('../views/auth/login/Login')));
 const Error = Loadable(lazy(() => import('../views/auth/error/Error')));
+
 
 const Router = [
   {
@@ -76,7 +76,6 @@ const Router = [
     element: <BlankLayout />,
     children: [
       { path: '/auth/login', element: <Login /> },
-      { path: '/auth/forgot-password', element: <ForgotPassword /> },
       { path: '404', element: <Error /> },
       { path: '/auth/404', element: <Error /> },
       { path: '*', element: <Navigate to="/auth/404" /> },

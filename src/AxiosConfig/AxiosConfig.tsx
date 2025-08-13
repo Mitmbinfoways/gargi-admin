@@ -7,6 +7,19 @@ const axiosInstance = axios.create({
   },
 });
 
+axiosInstance.interceptors.request.use(
+  (config) => {
+    const token = sessionStorage.getItem('token');
+    if (token) {
+      config.headers['token'] = token;
+    }
+    return config;
+  },
+  (error) => {
+    return Promise.reject(error);
+  },
+);
+
 export const Login = async (data: any) => {
   return axiosInstance.post(`/api/v1/admin/login`, data);
 };
@@ -163,10 +176,17 @@ export const getBlogById = async (id: any) => {
   return axiosInstance.get(`/api/v1/blogs/${id}`);
 };
 
+export const getUserProfile = async (id: any) => {
+  return axiosInstance.get(`/api/v1/admin/profile/${id}`);
+};
+
+export const updateUserProfile = async (data: any) => {
+  return axiosInstance.put(`/api/v1/admin/profile`, data);
+};
+
 export const deleteBlogs = async (id: any) => {
   return axiosInstance.delete(`/api/v1/blogs/${id}`);
 };
-
 export const getCounts = () => {
   return axiosInstance.get(`api/v1/products/dashboard/counts`);
 };

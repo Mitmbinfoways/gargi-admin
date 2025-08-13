@@ -21,14 +21,14 @@ const DashboardPage = () => {
       textColor: 'text-blue-700',
       link: '/products',
     },
-    {
-      title: 'Blogs',
-      value: stats.blogs || 0,
-      icon: 'solar:layers-minimalistic-linear',
-      bg: 'bg-green-100',
-      textColor: 'text-orange-700',
-      link: '/blogs',
-    },
+    // {
+    //   title: 'Blogs',
+    //   value: stats.blogs || 0,
+    //   icon: 'solar:layers-minimalistic-linear',
+    //   bg: 'bg-green-100',
+    //   textColor: 'text-orange-700',
+    //   link: '/blogs',
+    // },
   ];
 
   const fetchData = async () => {

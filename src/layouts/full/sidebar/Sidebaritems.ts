@@ -51,18 +51,18 @@ const SidebarContent: MenuItem[] = [
         id: 'create-product',
         url: '/create-product',
       },
-      {
-        name: 'Blogs',
-        icon: getIconByName('Blog'),
-        id: 'blogs',
-        url: '/blogs',
-      },
-      {
-        name: 'Create Blog',
-        icon: getIconByName('Blog'),
-        id: 'create-blog',
-        url: '/create-blog',
-      },
+      // {
+      //   name: 'Blogs',
+      //   icon: getIconByName('Blog'),
+      //   id: 'blogs',
+      //   url: '/blogs',
+      // },
+      // {
+      //   name: 'Create Blog',
+      //   icon: getIconByName('Blog'),
+      //   id: 'create-blog',
+      //   url: '/create-blog',
+      // },
     ],
   },
 ];
