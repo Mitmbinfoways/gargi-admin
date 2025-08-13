@@ -150,7 +150,7 @@ const Profile: React.FC = () => {
               {errors.email && <p className="text-sm text-red-500">{errors.email}</p>}
             </div>
 
-            <div className="flex items-center gap-5">
+            {/* <div className="flex items-center gap-5">
               {formData.avatar && (
                 <img
                   src={formData.avatar}
@@ -171,7 +171,7 @@ const Profile: React.FC = () => {
                 }}
                 className="block w-full text-sm text-gray-900 border rounded-lg cursor-pointer bg-gray-50"
               />
-            </div>
+            </div> */}
 
             <div className="flex gap-3 mt-6">
               <Button color="primary" onClick={handleUpdate} disabled={isLoading}>
@@ -240,24 +240,16 @@ const Profile: React.FC = () => {
       ) : (
         profile && (
           <div className="flex flex-col items-center gap-6">
-            <img
+            {/* <img
               className="w-28 h-28 rounded-full border-4 border-indigo-500 shadow-md object-cover"
               src={profile.avatar}
               alt="Profile Avatar"
-            />
+            /> */}
             <div className="space-y-3">
               <h1 className="text-3xl font-bold">{profile.name}</h1>
               <div className="text-gray-700 text-base space-y-1 mt-4">
                 <p>
                   <span className="font-semibold">Email:</span> {profile.email}
-                </p>
-                <p>
-                  <span className="font-semibold">Joined:</span>{' '}
-                  {new Date(profile.createdAt).toLocaleDateString()}
-                </p>
-                <p>
-                  <span className="font-semibold">Last Login:</span>{' '}
-                  {new Date(profile.lastLogin).toLocaleDateString()}
                 </p>
               </div>
               <div className="flex items-center gap-3">

@@ -5,23 +5,36 @@ import { MdDelete, MdModeEdit } from "react-icons/md";
 import Spinner from "../spinner/Spinner";
 import { deleteProduct, getProducts, UpdateProduct } from "src/AxiosConfig/AxiosConfig";
 import { ToggleSwitch } from "flowbite-react";
+import DeleteDialog from "src/components/DeleteDialog";
+import Pagination from "src/components/Pagination";
 
 const Page = () => {
   const [loading, setLoading] = useState(false);
   const [data, setData] = useState<any[]>([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
   const navigate = useNavigate();
+  const [open, setOpen] = useState(false);
+  const [deleteId, setDeleteId] = useState<string | null>(null);
 
-  const fetchData = async () => {
+  const fetchData = async (page: number = 1) => {
     setLoading(true);
     try {
-      const res = await getProducts();
-      setData(res.data.data || []);
+      const params = { page, limit: 10 };
+      const res = await getProducts(params);
+      setData(res.data.data.products || []);
+      setTotalPages(res.data.data.pagination.totalPages);
     } catch (error) {
       console.error(error);
     } finally {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    fetchData(currentPage);
+  }, [currentPage]);
+
 
   const handleEdit = (id: string) => {
     navigate("/create-product", { state: { id } });
@@ -30,39 +43,35 @@ const Page = () => {
   const handleDelete = async (id: string) => {
     try {
       await deleteProduct(id);
-      setData((prev) => prev.filter((item) => item._id !== id));
+      const newData = data.filter((item) => item._id !== id);
+      setData(newData);
+      setOpen(false);
+      if (newData.length === 0 && currentPage > 1) {
+        setCurrentPage(currentPage - 1);
+      } else {
+        fetchData(currentPage);
+      }
     } catch (error) {
       console.error(error);
     }
   };
+
 
   const handleToggle = async (id: string, checked: boolean) => {
     setData((prev) =>
-      prev.map((item) =>
-        item._id === id ? { ...item, isActive: checked } : item
-      )
+      prev.map((item) => (item._id === id ? { ...item, isActive: checked } : item))
     );
     try {
-      const data = {
-        isActive: checked.toString()
-      }
-      await UpdateProduct(id, data);
+      await UpdateProduct(id, { isActive: checked.toString() });
     } catch (error) {
       console.error(error);
       setData((prev) =>
-        prev.map((item) =>
-          item._id === id ? { ...item, isActive: !checked } : item
-        )
+        prev.map((item) => (item._id === id ? { ...item, isActive: !checked } : item))
       );
     }
-  };
-
-  useEffect(() => {
-    fetchData();
-  }, []);
+  }
 
   return (
-
     <div className="relative min-h-screen">
       <h1 className="text-2xl font-bold mb-6">Products</h1>
       <div className="bg-white shadow-md rounded-md overflow-x-auto">
@@ -72,24 +81,26 @@ const Page = () => {
               <th className="px-4 py-3">Index</th>
               <th className="px-4 py-3">Image</th>
               <th className="px-4 py-3">Name</th>
-              <th className="px-4 py-3">Price/Pack</th>
               <th className="px-4 py-3">Category</th>
               <th className="px-4 py-3">Material</th>
-              <th className="px-4 py-3">Description</th>
+              <th className="px-4 py-3">Price/Pack</th>
+              <th className="px-4 py-3">Quantity</th>
               <th className="px-4 py-3">Actions</th>
             </tr>
           </thead>
           <tbody className="bg-white divide-y divide-gray-200">
             {loading ? (
               <tr>
-                <td colSpan={9} className="text-center py-4">
+                <td colSpan={8} className="text-center py-4">
                   <Spinner />
                 </td>
               </tr>
             ) : data.length > 0 ? (
               data.map((product, index) => (
                 <tr key={product._id}>
-                  <td className="px-4 py-3 whitespace-nowrap">{index + 1}</td>
+                  <td className="px-4 py-3 whitespace-nowrap">
+                    {(currentPage - 1) * 10 + index + 1}
+                  </td>
                   <td className="px-4 py-3 whitespace-nowrap">
                     {product.image?.[0] ? (
                       <img
@@ -97,8 +108,7 @@ const Page = () => {
                         alt={product.name}
                         className="h-10 w-10 object-cover rounded"
                         onError={(e) => {
-                          (e.target as HTMLImageElement).src =
-                            "/fallback-image.jpg";
+                          (e.target as HTMLImageElement).src = "/fallback-image.jpg";
                         }}
                       />
                     ) : (
@@ -106,13 +116,11 @@ const Page = () => {
                     )}
                   </td>
                   <td className="px-4 py-3 whitespace-nowrap">{product.name}</td>
-                  <td className="px-4 py-3 whitespace-nowrap">
-                    ₹{product.pricePerPack}
-                  </td>
                   <td className="px-4 py-3 whitespace-nowrap">{product.category}</td>
                   <td className="px-4 py-3 whitespace-nowrap">{product.material}</td>
+                  <td className="px-4 py-3 whitespace-nowrap">₹{product.pricePerPack}</td>
                   <td className="px-4 py-3 whitespace-nowrap max-w-xs truncate">
-                    {product.description || "—"}
+                    {product.quantityPerPack || "—"}
                   </td>
                   <td className="px-4 py-3 whitespace-nowrap">
                     <div className="flex gap-3 items-center">
@@ -126,7 +134,10 @@ const Page = () => {
                         size={18}
                         className="text-red-600 cursor-pointer"
                         title="Delete"
-                        onClick={() => handleDelete(product._id)}
+                        onClick={() => {
+                          setDeleteId(product._id);
+                          setOpen(true);
+                        }}
                       />
                       <ToggleSwitch
                         checked={String(product.isActive).toLowerCase() === "true"}
@@ -138,7 +149,7 @@ const Page = () => {
               ))
             ) : (
               <tr>
-                <td colSpan={9}>
+                <td colSpan={8}>
                   <NoDataFound />
                 </td>
               </tr>
@@ -146,6 +157,23 @@ const Page = () => {
           </tbody>
         </table>
       </div>
+
+      <Pagination
+        currentPage={currentPage}
+        totalPages={totalPages}
+        onPageChange={(page) => setCurrentPage(page)}
+      />
+
+      {deleteId && (
+        <DeleteDialog
+          isOpen={open}
+          onDelete={() => handleDelete(deleteId)}
+          onCancel={() => {
+            setOpen(false);
+            setDeleteId(null);
+          }}
+        />
+      )}
     </div>
   );
 };

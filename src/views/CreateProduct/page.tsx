@@ -3,6 +3,7 @@ import { Button, Label, Textarea, TextInput, Checkbox, Select } from 'flowbite-r
 import ImageUpload from 'src/components/ImageUpload';
 import { createProduct, getProductById, UpdateProduct } from 'src/AxiosConfig/AxiosConfig';
 import { useLocation, useNavigate } from 'react-router';
+import Spinner from '../spinner/Spinner';
 
 interface ProductFormData {
   name: string;
@@ -41,6 +42,7 @@ function Page() {
   const [imagePreviews, setImagePreviews] = useState<string[]>([]);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [loading, setLoading] = useState(false);
+
   const handleChange = (field: keyof ProductFormData, value: any) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
     setErrors((prev) => ({ ...prev, [field]: '' }));
@@ -166,7 +168,7 @@ function Page() {
         {isEdit ? 'Edit Product' : 'Create New Product'}
       </h1>
 
-      <form className="space-y-8" onSubmit={handleSubmit} noValidate>
+      {loading ? <Spinner/> : <form className="space-y-8" onSubmit={handleSubmit} noValidate>
         <div className="flex items-start gap-8">
           <div className="w-full">
             <Label className="mb-2 block text-base font-semibold">
@@ -208,8 +210,7 @@ function Page() {
                 <option value="">Select category</option>
                 <option value="Plates">Plates</option>
                 <option value="Bowls">Bowls</option>
-                <option value="Spoons">Spoons</option>
-                <option value="Forks">Forks</option>
+                <option value="SpoonsAndForks">Spoons & Forks</option>
                 <option value="Knives">Knives</option>
                 <option value="Containers">Containers</option>
                 <option value="Cups">Cups</option>
@@ -254,6 +255,7 @@ function Page() {
                 placeholder="Enter price"
                 value={formData.pricePerPack}
                 onChange={(e) => handleChange('pricePerPack', e.target.value)}
+                onWheel={(e) => e.currentTarget.blur()} // prevent scroll change
                 color={errors.pricePerPack ? 'failure' : undefined}
               />
               {errors.pricePerPack && (
@@ -269,6 +271,7 @@ function Page() {
                 placeholder="Enter quantity"
                 value={formData.quantityPerPack}
                 onChange={(e) => handleChange('quantityPerPack', e.target.value)}
+                onWheel={(e) => e.currentTarget.blur()} // prevent scroll change
                 color={errors.quantityPerPack ? 'failure' : undefined}
               />
               {errors.quantityPerPack && (
@@ -315,7 +318,7 @@ function Page() {
             {loading ? 'Submitting...' : isEdit ? 'Update Product' : 'Create Product'}
           </Button>
         </div>
-      </form>
+      </form>}
     </div>
   );
 }

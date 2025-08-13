@@ -1,4 +1,3 @@
-// components/DeleteDialog.tsx
 import React from 'react';
 
 interface DeleteDialogProps {
