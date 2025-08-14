@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Button, Label, Spinner, TextInput } from 'flowbite-react';
-import { Link, useNavigate } from 'react-router-dom';
+import {  useNavigate } from 'react-router-dom';
 import { Login } from 'src/AxiosConfig/AxiosConfig';
 import { login } from 'src/Store/Slices/AdminUser';
 import { useDispatch } from 'react-redux';
