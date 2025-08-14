@@ -6,7 +6,6 @@ import Profile from "./Profile";
 import { Drawer } from "flowbite-react";
 import MobileSidebar from "../sidebar/MobileSidebar";
 
-
 const Header = () => {
   const [isSticky, setIsSticky] = useState(false);
 

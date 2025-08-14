@@ -112,9 +112,9 @@ const AuthLogin = () => {
             Remember Me
           </Label>
         </div> */}
-        <Link to="/auth/forgot-password" className="text-primary text-sm font-medium">
+        {/* <Link to="/auth/forgot-password" className="text-primary text-sm font-medium">
           Forgot Password?
-        </Link>
+        </Link> */}
       </div>
       {errorMsg && <p className="text-red-600 mb-5">{errorMsg}</p>}
 

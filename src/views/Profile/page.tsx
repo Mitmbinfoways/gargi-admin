@@ -141,37 +141,27 @@ const Profile: React.FC = () => {
           <div className="space-y-4">
             <div>
               <Label>Name</Label>
-              <TextInput type="text" name="name" value={formData.name} onChange={handleChange} />
+              <TextInput
+                type="text"
+                name="name"
+                value={formData.name}
+                onChange={handleChange}
+                className="w-96" // Fixed width (24rem)
+              />
               {errors.name && <p className="text-sm text-red-500">{errors.name}</p>}
             </div>
+
             <div>
               <Label>Email</Label>
-              <TextInput type="email" name="email" value={formData.email} onChange={handleChange} />
+              <TextInput
+                type="email"
+                name="email"
+                value={formData.email}
+                onChange={handleChange}
+                className="w-96"
+              />
               {errors.email && <p className="text-sm text-red-500">{errors.email}</p>}
             </div>
-
-            {/* <div className="flex items-center gap-5">
-              {formData.avatar && (
-                <img
-                  src={formData.avatar}
-                  alt="Avatar Preview"
-                  className="w-24 h-24 rounded-full border-2 border-gray-300 object-cover"
-                />
-              )}
-              <input
-                type="file"
-                accept="image/*"
-                onChange={(e) => {
-                  const file = e.target.files?.[0];
-                  if (file) {
-                    const previewURL = URL.createObjectURL(file);
-                    setFormData((prev) => ({ ...prev, avatar: previewURL }));
-                    // Optionally: Upload file to server here
-                  }
-                }}
-                className="block w-full text-sm text-gray-900 border rounded-lg cursor-pointer bg-gray-50"
-              />
-            </div> */}
 
             <div className="flex gap-3 mt-6">
               <Button color="primary" onClick={handleUpdate} disabled={isLoading}>
