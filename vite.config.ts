@@ -31,7 +31,5 @@ export default defineConfig({
       ],
     },
   },
-
-  base: '/admin',
   plugins: [svgr(), react()],
 });

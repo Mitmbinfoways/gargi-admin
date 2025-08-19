@@ -21,7 +21,7 @@ axiosInstance.interceptors.request.use(
 );
 
 export const Login = async (data: any) => {
-  return axiosInstance.post(`/api/v1/admin/login`, data);
+  return axiosInstance.post(`/api/v1/login`, data);
 };
 
 export const createProduct = async (data: any) => {
@@ -177,11 +177,11 @@ export const getBlogById = async (id: any) => {
 };
 
 export const getUserProfile = async (id: any) => {
-  return axiosInstance.get(`/api/v1/admin/profile/${id}`);
+  return axiosInstance.get(`/api/v1/profile/${id}`);
 };
 
 export const updateUserProfile = async (data: any) => {
-  return axiosInstance.put(`/api/v1/admin/profile`, data);
+  return axiosInstance.put(`/api/v1/profile`, data);
 };
 
 export const deleteBlogs = async (id: any) => {
