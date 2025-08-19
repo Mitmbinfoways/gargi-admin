@@ -21,7 +21,7 @@ axiosInstance.interceptors.request.use(
 );
 
 export const Login = async (data: any) => {
-  return axiosInstance.post(`/api/v1/login`, data);
+  return axiosInstance.post(`/api/v1/admin/login`, data);
 };
 
 export const createProduct = async (data: any) => {
