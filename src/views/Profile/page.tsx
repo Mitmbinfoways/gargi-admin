@@ -1,10 +1,9 @@
-// export default Profile;
 import { Button, Label, TextInput } from 'flowbite-react';
 import React, { useEffect, useState } from 'react';
 import { HiEye, HiEyeOff } from 'react-icons/hi';
-// import { Toast } from 'src/components/Toast';
 import Spinner from '../spinner/Spinner';
 import { getUserProfile, updateUserProfile } from 'src/AxiosConfig/AxiosConfig';
+import { Toast } from 'src/components/Toast';
 
 type UserProfile = {
   _id: string;
@@ -55,7 +54,6 @@ const Profile: React.FC = () => {
       });
     } catch (error) {
       console.error(error);
-      // Toast.error('Failed to load profile');
     } finally {
       setIsLoading(false);
     }
@@ -86,15 +84,12 @@ const Profile: React.FC = () => {
     setErrors({});
     try {
       setIsLoading(true);
-      // Send data (modify if backend requires FormData for image)
       const res = await updateUserProfile(formData);
       setProfile(res.data.data);
       setIsEditing(false);
       sessionStorage.setItem('admin', JSON.stringify(res.data.data));
-      // Toast.success('Profile updated successfully');
     } catch (error) {
       console.error(error);
-      // Toast.error('Failed to update profile');
     } finally {
       setIsLoading(false);
     }
@@ -123,7 +118,7 @@ const Profile: React.FC = () => {
       setIsChangingPassword(false);
       setPasswordData({ oldPassword: '', newPassword: '' });
       sessionStorage.setItem('admin', JSON.stringify(res.data.data));
-      // Toast.success('Password changed successfully');
+      Toast({ message: 'Password changed successfully', type: 'success' });
     } catch (error: any) {
       setApiPasswordError(error.response?.data?.message || 'Failed to change password');
     } finally {
@@ -132,127 +127,129 @@ const Profile: React.FC = () => {
   };
 
   return (
-    <div className="flex justify-start px-4 py-8">
+    <div className="flex px-4 py-8">
       {isLoading ? (
         <Spinner />
-      ) : isEditing ? (
-        <div>
-          <h2 className="text-2xl font-bold text-gray-800 mb-4">Update Profile</h2>
-          <div className="space-y-4">
-            <div>
-              <Label>Name</Label>
-              <TextInput
-                type="text"
-                name="name"
-                value={formData.name}
-                onChange={handleChange}
-                className="w-96" // Fixed width (24rem)
-              />
-              {errors.name && <p className="text-sm text-red-500">{errors.name}</p>}
-            </div>
-
-            <div>
-              <Label>Email</Label>
-              <TextInput
-                type="email"
-                name="email"
-                value={formData.email}
-                onChange={handleChange}
-                className="w-96"
-              />
-              {errors.email && <p className="text-sm text-red-500">{errors.email}</p>}
-            </div>
-
-            <div className="flex gap-3 mt-6">
-              <Button color="primary" onClick={handleUpdate} disabled={isLoading}>
-                Save
-              </Button>
-              <Button color="gray" onClick={() => setIsEditing(false)}>
-                Cancel
-              </Button>
-            </div>
-          </div>
-        </div>
-      ) : isChangingPassword ? (
-        <div>
-          <h2 className="text-2xl font-bold text-gray-800 mb-4">Change Password</h2>
-          <div className="space-y-4">
-            <div>
-              <Label>Old Password</Label>
-              <div className="relative">
-                <TextInput
-                  type={showOldPassword ? 'text' : 'password'}
-                  name="oldPassword"
-                  value={passwordData.oldPassword}
-                  onChange={handlePasswordChange}
-                />
-                <button
-                  type="button"
-                  className="absolute inset-y-0 right-0 pr-3 flex items-center"
-                  onClick={() => setShowOldPassword(!showOldPassword)}
-                >
-                  {showOldPassword ? <HiEye /> : <HiEyeOff />}
-                </button>
-              </div>
-              {errors.oldPassword && <p className="text-sm text-red-500">{errors.oldPassword}</p>}
-            </div>
-            <div>
-              <Label>New Password</Label>
-              <div className="relative">
-                <TextInput
-                  type={showNewPassword ? 'text' : 'password'}
-                  name="newPassword"
-                  value={passwordData.newPassword}
-                  onChange={handlePasswordChange}
-                />
-                <button
-                  type="button"
-                  className="absolute inset-y-0 right-0 pr-3 flex items-center"
-                  onClick={() => setShowNewPassword(!showNewPassword)}
-                >
-                  {showNewPassword ? <HiEye /> : <HiEyeOff />}
-                </button>
-              </div>
-              {errors.newPassword && <p className="text-sm text-red-500">{errors.newPassword}</p>}
-            </div>
-            {apiPasswordError && <p className="text-sm text-red-600">{apiPasswordError}</p>}
-
-            <div className="flex gap-3 mt-6">
-              <Button color="primary" onClick={handlePasswordSubmit}>
-                Change Password
-              </Button>
-              <Button color="gray" onClick={() => setIsChangingPassword(false)}>
-                Cancel
-              </Button>
-            </div>
-          </div>
-        </div>
       ) : (
-        profile && (
-          <div className="flex flex-col items-center gap-6">
-            {/* <img
-              className="w-28 h-28 rounded-full border-4 border-indigo-500 shadow-md object-cover"
-              src={profile.avatar}
-              alt="Profile Avatar"
-            /> */}
-            <div className="space-y-3">
-              <h1 className="text-3xl font-bold">{profile.name}</h1>
-              <div className="text-gray-700 text-base space-y-1 mt-4">
-                <p>
-                  <span className="font-semibold">Email:</span> {profile.email}
-                </p>
-              </div>
-              <div className="flex items-center gap-3">
-                <Button color="primary" onClick={() => setIsEditing(true)}>
-                  Update Profile
-                </Button>
-                <Button color="primary" onClick={() => setIsChangingPassword(true)}>
-                  Change Password
-                </Button>
+        <div className="w-full max-w-lg">
+          {isEditing ? (
+            <div>
+              <h2 className="text-2xl font-bold text-gray-800 mb-4">Update Profile</h2>
+              <div className="space-y-4">
+                <div>
+                  <Label>Name</Label>
+                  <TextInput
+                    type="text"
+                    name="name"
+                    value={formData.name}
+                    onChange={handleChange}
+                    className="w-full"
+                  />
+                  {errors.name && <p className="text-sm text-red-500">{errors.name}</p>}
+                </div>
+
+                <div>
+                  <Label>Email</Label>
+                  <TextInput
+                    type="email"
+                    name="email"
+                    value={formData.email}
+                    onChange={handleChange}
+                    className="w-full"
+                  />
+                  {errors.email && <p className="text-sm text-red-500">{errors.email}</p>}
+                </div>
+
+                <div className="flex flex-col sm:flex-row gap-3 mt-6">
+                  <Button color="primary" onClick={handleUpdate} disabled={isLoading} className="w-full sm:w-auto">
+                    Save
+                  </Button>
+                  <Button color="gray" onClick={() => setIsEditing(false)} className="w-full sm:w-auto">
+                    Cancel
+                  </Button>
+                </div>
               </div>
             </div>
-          </div>
-        )
+          ) : isChangingPassword ? (
+            <div>
+              <h2 className="text-2xl font-bold text-gray-800 mb-4">Change Password</h2>
+              <div className="space-y-4">
+                <div>
+                  <Label>Old Password</Label>
+                  <div className="relative">
+                    <TextInput
+                      type={showOldPassword ? 'text' : 'password'}
+                      name="oldPassword"
+                      value={passwordData.oldPassword}
+                      onChange={handlePasswordChange}
+                      className="w-full"
+                    />
+                    <button
+                      type="button"
+                      className="absolute inset-y-0 right-0 pr-3 flex items-center"
+                      onClick={() => setShowOldPassword(!showOldPassword)}
+                    >
+                      {showOldPassword ? <HiEye /> : <HiEyeOff />}
+                    </button>
+                  </div>
+                  {errors.oldPassword && <p className="text-sm text-red-500">{errors.oldPassword}</p>}
+                </div>
+                <div>
+                  <Label>New Password</Label>
+                  <div className="relative">
+                    <TextInput
+                      type={showNewPassword ? 'text' : 'password'}
+                      name="newPassword"
+                      value={passwordData.newPassword}
+                      onChange={handlePasswordChange}
+                      className="w-full"
+                    />
+                    <button
+                      type="button"
+                      className="absolute inset-y-0 right-0 pr-3 flex items-center"
+                      onClick={() => setShowNewPassword(!showNewPassword)}
+                    >
+                      {showNewPassword ? <HiEye /> : <HiEyeOff />}
+                    </button>
+                  </div>
+                  {errors.newPassword && <p className="text-sm text-red-500">{errors.newPassword}</p>}
+                </div>
+                {apiPasswordError && <p className="text-sm text-red-600">{apiPasswordError}</p>}
+
+                <div className="flex flex-col sm:flex-row gap-3 mt-6">
+                  <Button color="primary" onClick={handlePasswordSubmit} className="w-full sm:w-auto">
+                    Change Password
+                  </Button>
+                  <Button color="gray" onClick={() => setIsChangingPassword(false)} className="w-full sm:w-auto">
+                    Cancel
+                  </Button>
+                </div>
+              </div>
+            </div>
+          ) : (
+            profile && (
+              <div className="flex flex-col items-center gap-6">
+                {/* Avatar if needed */}
+                <div className="space-y-3 w-full">
+                  <h1 className="text-3xl font-bold break-words">{profile.name}</h1>
+                  <div className="text-gray-700 text-base space-y-1 mt-4 break-words">
+                    <p>
+                      <span className="font-semibold">Email:</span> {profile.email}
+                    </p>
+                  </div>
+                  <div className="flex flex-col sm:flex-row items-center gap-3 mt-4">
+                    <Button color="primary" onClick={() => setIsEditing(true)} className="w-full sm:w-auto">
+                      Update Profile
+                    </Button>
+                    <Button color="primary" onClick={() => setIsChangingPassword(true)} className="w-full sm:w-auto">
+                      Change Password
+                    </Button>
+                  </div>
+                </div>
+              </div>
+            )
+          )}
+        </div>
       )}
     </div>
   );

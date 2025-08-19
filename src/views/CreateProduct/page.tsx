@@ -57,7 +57,8 @@ function Page() {
 
     files.forEach((file) => {
       const reader = new FileReader();
-      reader.onload = (e) => setImagePreviews((prev) => [...prev, e.target?.result as string]);
+      reader.onload = (e) =>
+        setImagePreviews((prev) => [...prev, e.target?.result as string]);
       reader.readAsDataURL(file);
     });
   };
@@ -65,24 +66,18 @@ function Page() {
   const removeImage = (index: number) => {
     const previewToRemove = imagePreviews[index];
 
-    // If the preview is an old image URL
     if (formData.existingImages.includes(previewToRemove)) {
       setFormData((prev) => ({
         ...prev,
         existingImages: prev.existingImages.filter((img) => img !== previewToRemove),
       }));
     } else {
-      // Remove from newly uploaded files
       setFormData((prev) => ({
         ...prev,
-        images: prev.images.filter((_, i) => {
-          const filePreview = URL.createObjectURL(prev.images[i]);
-          return filePreview !== previewToRemove;
-        }),
+        images: prev.images.filter((_, i) => i !== index),
       }));
     }
 
-    // Remove from preview list
     setImagePreviews((prev) => prev.filter((_, i) => i !== index));
   };
 
@@ -92,7 +87,8 @@ function Page() {
     const qtyNum = Number(formData.quantityPerPack);
 
     if (!formData.name.trim()) newErrors.name = 'Name is required';
-    else if (formData.name.length < 2) newErrors.name = 'Name must be at least 2 characters';
+    else if (formData.name.length < 2)
+      newErrors.name = 'Name must be at least 2 characters';
     if (!formData.category) newErrors.category = 'Category is required';
     if (!formData.material) newErrors.material = 'Material is required';
     if (!formData.pricePerPack || priceNum <= 0)
@@ -120,16 +116,15 @@ function Page() {
       setLoading(true);
       if (isEdit) {
         await UpdateProduct(id, submitData);
-        setLoading(false);
         Toast({ message: 'Product Updated successfully', type: 'success' });
       } else {
         await createProduct(submitData);
-        setLoading(false);
-        Toast({ message: 'Product Create successfully', type: 'success' });
+        Toast({ message: 'Product Created successfully', type: 'success' });
       }
       navigate('/products');
     } catch (error) {
       console.error('Error saving product:', error);
+    } finally {
       setLoading(false);
     }
   };
@@ -166,89 +161,101 @@ function Page() {
   }, [id]);
 
   return (
-    <div className="bg-white p-6 rounded-lg shadow-md">
-      <h1 className="text-2xl font-bold mb-6 border-b pb-2">
+    <div className="bg-white p-4 sm:p-6 rounded-lg shadow-md">
+      <h1 className="text-xl sm:text-2xl font-bold mb-4 sm:mb-6 border-b pb-2">
         {isEdit ? 'Edit Product' : 'Create New Product'}
       </h1>
 
-      {loading ? <Spinner /> : <form className="space-y-8" onSubmit={handleSubmit} noValidate>
-        <div className="flex items-start gap-8">
-          <div className="w-full">
-            <Label className="mb-2 block text-base font-semibold">
-              Images <span className="text-red-600">*</span>
-            </Label>
-            <ImageUpload
-              multiple
-              previewUrls={imagePreviews}
-              onFilesChange={handleImageChange}
-              onRemove={removeImage}
-              height="h-28"
-            />
-            {errors.images && <p className="text-red-600 mt-1 text-sm">{errors.images}</p>}
-          </div>
-
-          <div className="w-full space-y-4">
-            <div>
-              <Label className="mb-1 block">
-                Name <span className="text-red-600">*</span>
+      {loading ? (
+        <Spinner />
+      ) : (
+        <form className="space-y-6 sm:space-y-8" onSubmit={handleSubmit} noValidate>
+          {/* Images + Basic Info */}
+          <div className="flex flex-col md:flex-row items-start gap-6 md:gap-8">
+            <div className="w-full md:w-1/2">
+              <Label className="mb-2 block text-base font-semibold">
+                Images <span className="text-red-600">*</span>
               </Label>
-              <TextInput
-                placeholder="Enter product name"
-                value={formData.name}
-                onChange={(e) => handleChange('name', e.target.value)}
-                color={errors.name ? 'failure' : undefined}
+              <ImageUpload
+                multiple
+                previewUrls={imagePreviews}
+                onFilesChange={handleImageChange}
+                onRemove={removeImage}
+                height="h-28"
               />
-              {errors.name && <p className="text-red-600 mt-1 text-sm">{errors.name}</p>}
+              {errors.images && (
+                <p className="text-red-600 mt-1 text-sm">{errors.images}</p>
+              )}
             </div>
 
-            <div>
-              <Label className="mb-1 block">
-                Category <span className="text-red-600">*</span>
-              </Label>
-              <Select
-                value={formData.category}
-                onChange={(e) => handleChange('category', e.target.value)}
-                color={errors.category ? 'failure' : undefined}
-              >
-                <option value="">Select category</option>
-                <option value="Plates">Plates</option>
-                <option value="Bowls">Bowls</option>
-                <option value="SpoonsAndForks">Spoons & Forks</option>
-                <option value="Knives">Knives</option>
-                <option value="Containers">Containers</option>
-                <option value="Cups">Cups</option>
-                <option value="Trays">Trays</option>
-                <option value="Straws">Straws</option>
-                <option value="NapkinsAndTissues">Napkins & Tissues</option>
-                <option value="PartyPackAndCombos">Party Pack & Combos</option>
-              </Select>
-              {errors.category && <p className="text-red-600 mt-1 text-sm">{errors.category}</p>}
-            </div>
+            <div className="w-full md:w-1/2 space-y-4">
+              <div>
+                <Label className="mb-1 block">
+                  Name <span className="text-red-600">*</span>
+                </Label>
+                <TextInput
+                  placeholder="Enter product name"
+                  value={formData.name}
+                  onChange={(e) => handleChange('name', e.target.value)}
+                  color={errors.name ? 'failure' : undefined}
+                />
+                {errors.name && (
+                  <p className="text-red-600 mt-1 text-sm">{errors.name}</p>
+                )}
+              </div>
 
-            <div>
-              <Label className="mb-1 block">
-                Material <span className="text-red-600">*</span>
-              </Label>
-              <Select
-                value={formData.material}
-                onChange={(e) => handleChange('material', e.target.value)}
-                color={errors.material ? 'failure' : undefined}
-              >
-                <option value="">Select material</option>
-                <option value="Paper">Paper</option>
-                <option value="Plastic">Plastic</option>
-                <option value="Foam">Foam</option>
-                <option value="Biodegradable">Biodegradable</option>
-                <option value="Palm Leaf">Palm Leaf</option>
-                <option value="Bamboo">Bamboo</option>
-              </Select>
-              {errors.material && <p className="text-red-600 mt-1 text-sm">{errors.material}</p>}
+              <div>
+                <Label className="mb-1 block">
+                  Category <span className="text-red-600">*</span>
+                </Label>
+                <Select
+                  value={formData.category}
+                  onChange={(e) => handleChange('category', e.target.value)}
+                  color={errors.category ? 'failure' : undefined}
+                >
+                  <option value="">Select category</option>
+                  <option value="Plates">Plates</option>
+                  <option value="Bowls">Bowls</option>
+                  <option value="SpoonsAndForks">Spoons & Forks</option>
+                  <option value="Knives">Knives</option>
+                  <option value="Containers">Containers</option>
+                  <option value="Cups">Cups</option>
+                  <option value="Trays">Trays</option>
+                  <option value="Straws">Straws</option>
+                  <option value="NapkinsAndTissues">Napkins & Tissues</option>
+                  <option value="PartyPackAndCombos">Party Pack & Combos</option>
+                </Select>
+                {errors.category && (
+                  <p className="text-red-600 mt-1 text-sm">{errors.category}</p>
+                )}
+              </div>
+
+              <div>
+                <Label className="mb-1 block">
+                  Material <span className="text-red-600">*</span>
+                </Label>
+                <Select
+                  value={formData.material}
+                  onChange={(e) => handleChange('material', e.target.value)}
+                  color={errors.material ? 'failure' : undefined}
+                >
+                  <option value="">Select material</option>
+                  <option value="Paper">Paper</option>
+                  <option value="Plastic">Plastic</option>
+                  <option value="Foam">Foam</option>
+                  <option value="Biodegradable">Biodegradable</option>
+                  <option value="Palm Leaf">Palm Leaf</option>
+                  <option value="Bamboo">Bamboo</option>
+                </Select>
+                {errors.material && (
+                  <p className="text-red-600 mt-1 text-sm">{errors.material}</p>
+                )}
+              </div>
             </div>
           </div>
-        </div>
 
-        <div className="space-y-6">
-          <div className="grid grid-cols-2 gap-4">
+          {/* Pricing + Quantity */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <Label className="mb-1 block">
                 Price Per Pack <span className="text-red-600">*</span>
@@ -258,7 +265,7 @@ function Page() {
                 placeholder="Enter price"
                 value={formData.pricePerPack}
                 onChange={(e) => handleChange('pricePerPack', e.target.value)}
-                onWheel={(e) => e.currentTarget.blur()} // prevent scroll change
+                onWheel={(e) => e.currentTarget.blur()}
                 color={errors.pricePerPack ? 'failure' : undefined}
               />
               {errors.pricePerPack && (
@@ -274,7 +281,7 @@ function Page() {
                 placeholder="Enter quantity"
                 value={formData.quantityPerPack}
                 onChange={(e) => handleChange('quantityPerPack', e.target.value)}
-                onWheel={(e) => e.currentTarget.blur()} // prevent scroll change
+                onWheel={(e) => e.currentTarget.blur()}
                 color={errors.quantityPerPack ? 'failure' : undefined}
               />
               {errors.quantityPerPack && (
@@ -283,10 +290,14 @@ function Page() {
             </div>
           </div>
 
-          <div className="grid grid-cols-2 gap-4">
+          {/* Size + Description */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <Label className="mb-1 block">Size</Label>
-              <Select value={formData.size} onChange={(e) => handleChange('size', e.target.value)}>
+              <Select
+                value={formData.size}
+                onChange={(e) => handleChange('size', e.target.value)}
+              >
                 <option value="">Select size</option>
                 <option value="Small">Small</option>
                 <option value="Medium">Medium</option>
@@ -304,6 +315,7 @@ function Page() {
             </div>
           </div>
 
+          {/* Active Checkbox */}
           <div className="flex items-center space-x-2">
             <Checkbox
               checked={formData.isActive}
@@ -314,14 +326,15 @@ function Page() {
               Active
             </Label>
           </div>
-        </div>
 
-        <div className="flex justify-end pt-4">
-          <Button type="submit" color="primary" disabled={loading}>
-            {loading ? 'Submitting...' : isEdit ? 'Update Product' : 'Create Product'}
-          </Button>
-        </div>
-      </form>}
+          {/* Submit */}
+          <div className="flex justify-end pt-2 sm:pt-4">
+            <Button type="submit" color="primary" disabled={loading}>
+              {loading ? 'Submitting...' : isEdit ? 'Update Product' : 'Create Product'}
+            </Button>
+          </div>
+        </form>
+      )}
     </div>
   );
 }
