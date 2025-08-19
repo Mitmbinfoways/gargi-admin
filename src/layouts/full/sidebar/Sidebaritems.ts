@@ -20,11 +20,11 @@ type MenuItem = {
 const getIconByName = (name: string): string => {
   const iconMap: Record<string, string> = {
     Dashboard: 'solar:home-2-linear',
-    Product: 'solar:text-circle-outline',
+    Product: 'solar:box-linear',
+    CreateProduct: 'solar:add-square-linear',
+    Query: 'solar:chat-dots-outline',
     Blog: 'solar:book-outline',
     Tax: 'solar:calculator-outline',
-    Login: 'solar:login-2-linear',
-    Register: 'solar:shield-user-outline',
     Icons: 'solar:smile-circle-outline',
   };
   return iconMap[name] || 'solar:question-circle-linear';
@@ -47,14 +47,14 @@ const SidebarContent: MenuItem[] = [
       },
       {
         name: 'Create Product',
-        icon: getIconByName('Product'),
+        icon: getIconByName('CreateProduct'),
         id: 'create-product',
         url: '/create-product',
       },
       {
         name: 'Manage Query',
-        icon: getIconByName('Product'),
-        id: 'create-product',
+        icon: getIconByName('Query'),
+        id: 'manage-query',
         url: '/contact',
       },
       // {
@@ -65,7 +65,7 @@ const SidebarContent: MenuItem[] = [
       // },
       // {
       //   name: 'Create Blog',
-      //   icon: getIconByName('Blog'),
+      //   icon: getIconByName('CreateBlog'),
       //   id: 'create-blog',
       //   url: '/create-blog',
       // },

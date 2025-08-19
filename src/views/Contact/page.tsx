@@ -56,7 +56,7 @@ const page = () => {
                             </tr>
                         ) : data.length === 0 ? (
                             <tr>
-                                <td colSpan={4} className="text-center py-6">
+                                <td colSpan={6} className="text-center py-6">
                                     <NoDataFound />
                                 </td>
                             </tr>
