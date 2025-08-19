@@ -7,6 +7,7 @@ import CreateProduct from 'src/views/CreateProduct/page';
 import Product from 'src/views/ProductList/page';
 import CreateBlog from 'src/views/CreateBlog/page';
 import Blogs from 'src/views/Blogs/page';
+import Contact from 'src/views/Contact/page';
 import ProtectedRoute from 'src/components/ProtectedRoute/ProtectedRoute';
 
 const FullLayout = Loadable(lazy(() => import('../layouts/full/FullLayout')));
@@ -68,6 +69,14 @@ const Router = [
           </ProtectedRoute>
         ),
       },
+      {
+        path: '/contact',
+        element: (
+          <ProtectedRoute>
+            <Contact />
+          </ProtectedRoute>
+        ),
+      },
       { path: '*', element: <Navigate to="/auth/404" /> },
     ],
   },
@@ -83,5 +92,5 @@ const Router = [
   },
 ];
 
-const router = createBrowserRouter(Router);
+const router = createBrowserRouter(Router, { basename: '/admin' });
 export default router;

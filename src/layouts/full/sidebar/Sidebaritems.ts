@@ -51,6 +51,12 @@ const SidebarContent: MenuItem[] = [
         id: 'create-product',
         url: '/create-product',
       },
+      {
+        name: 'Manage Query',
+        icon: getIconByName('Product'),
+        id: 'create-product',
+        url: '/contact',
+      },
       // {
       //   name: 'Blogs',
       //   icon: getIconByName('Blog'),

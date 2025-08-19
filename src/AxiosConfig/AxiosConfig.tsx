@@ -190,3 +190,7 @@ export const deleteBlogs = async (id: any) => {
 export const getCounts = () => {
   return axiosInstance.get(`api/v1/products/dashboard/counts`);
 };
+
+export const getAllQuarys = () => {
+  return axiosInstance.get("/api/v1/contact")
+}

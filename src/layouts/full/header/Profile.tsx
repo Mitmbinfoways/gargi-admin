@@ -3,6 +3,8 @@ import { Icon } from '@iconify/react';
 import { Link, useNavigate } from 'react-router';
 import { useDispatch } from 'react-redux';
 import { logout } from 'src/Store/Slices/AdminUser';
+import logo from "../../../../public/logo.png"
+
 
 const Profile = () => {
   const navigation = useNavigate();
@@ -22,7 +24,7 @@ const Profile = () => {
         dismissOnClick={false}
         renderTrigger={() => (
           <span className="h-10 w-10 hover:text-primary hover:bg-lightprimary rounded-full border flex justify-center items-center cursor-pointer group-hover/menu:bg-lightprimary group-hover/menu:text-primary">
-            <img src="/logo.png" alt="logo" height="35" width="35" className="rounded-full " />
+            <img src={logo} alt="logo" height="35" width="35" className="rounded-full " />
           </span>
         )}
       >

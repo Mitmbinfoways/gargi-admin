@@ -7,6 +7,7 @@ import { deleteProduct, getProducts, UpdateProduct } from "src/AxiosConfig/Axios
 import { ToggleSwitch } from "flowbite-react";
 import DeleteDialog from "src/components/DeleteDialog";
 import Pagination from "src/components/Pagination";
+import { Toast } from "src/components/Toast";
 
 const Page = () => {
   const [loading, setLoading] = useState(false);
@@ -51,6 +52,7 @@ const Page = () => {
       } else {
         fetchData(currentPage);
       }
+      Toast({ message: 'Product deleted successfully', type: 'success' });
     } catch (error) {
       console.error(error);
     }

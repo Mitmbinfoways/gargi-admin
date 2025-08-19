@@ -4,6 +4,7 @@ import ImageUpload from 'src/components/ImageUpload';
 import { createProduct, getProductById, UpdateProduct } from 'src/AxiosConfig/AxiosConfig';
 import { useLocation, useNavigate } from 'react-router';
 import Spinner from '../spinner/Spinner';
+import { Toast } from 'src/components/Toast';
 
 interface ProductFormData {
   name: string;
@@ -120,9 +121,11 @@ function Page() {
       if (isEdit) {
         await UpdateProduct(id, submitData);
         setLoading(false);
+        Toast({ message: 'Product Updated successfully', type: 'success' });
       } else {
         await createProduct(submitData);
         setLoading(false);
+        Toast({ message: 'Product Create successfully', type: 'success' });
       }
       navigate('/products');
     } catch (error) {
@@ -168,7 +171,7 @@ function Page() {
         {isEdit ? 'Edit Product' : 'Create New Product'}
       </h1>
 
-      {loading ? <Spinner/> : <form className="space-y-8" onSubmit={handleSubmit} noValidate>
+      {loading ? <Spinner /> : <form className="space-y-8" onSubmit={handleSubmit} noValidate>
         <div className="flex items-start gap-8">
           <div className="w-full">
             <Label className="mb-2 block text-base font-semibold">
