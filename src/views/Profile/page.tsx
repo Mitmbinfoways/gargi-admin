@@ -1,9 +1,9 @@
 import { Button, Label, TextInput } from 'flowbite-react';
 import React, { useEffect, useState } from 'react';
 import { HiEye, HiEyeOff } from 'react-icons/hi';
-import Spinner from '../spinner/Spinner';
 import { getUserProfile, updateUserProfile } from 'src/AxiosConfig/AxiosConfig';
 import { Toast } from 'src/components/Toast';
+import Spinner from '../spinner/Spinner';
 
 type UserProfile = {
   _id: string;

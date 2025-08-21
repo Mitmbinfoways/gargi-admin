@@ -24,6 +24,9 @@ const getIconByName = (name: string): string => {
     CreateProduct: 'solar:add-square-linear',
     Query: 'solar:chat-dots-outline',
     Blog: 'solar:book-outline',
+    Category: "solar:layers-linear",
+    Material: "solar:pen-linear", 
+    Size: "solar:ruler-linear",
     Tax: 'solar:calculator-outline',
     Icons: 'solar:smile-circle-outline',
   };
@@ -56,6 +59,24 @@ const SidebarContent: MenuItem[] = [
         icon: getIconByName('Query'),
         id: 'manage-query',
         url: '/contact',
+      },
+      {
+        name: 'Manage Category',
+        icon: getIconByName('Category'),
+        id: 'manage-query',
+        url: '/category',
+      },
+      {
+        name: "Manage Material",
+        icon: getIconByName("Material"),
+        id: "manage-material",
+        url: "/material",
+      },
+      {
+        name: 'Manage Size',
+        icon: getIconByName('Size'),
+        id: 'manage-query',
+        url: '/size',
       },
       // {
       //   name: 'Blogs',

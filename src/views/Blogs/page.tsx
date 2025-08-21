@@ -2,9 +2,9 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import NoDataFound from "src/components/NoDataFound";
 import { MdDelete, MdModeEdit } from "react-icons/md";
-import Spinner from "../spinner/Spinner";
 import { getBlogs, UpdateBlogs, deleteBlogs } from "src/AxiosConfig/AxiosConfig";
 import { ToggleSwitch } from "flowbite-react";
+import Spinner from "../spinner/Spinner";
 
 interface BlogContent {
   _id: string;

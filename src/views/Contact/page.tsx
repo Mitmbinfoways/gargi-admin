@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import NoDataFound from 'src/components/NoDataFound';
-import Spinner from '../spinner/Spinner';
 import { getAllQuarys } from 'src/AxiosConfig/AxiosConfig';
+import Spinner from '../spinner/Spinner';
 
 interface Quarries {
     firstName: string;

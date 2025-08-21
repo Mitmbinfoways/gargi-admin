@@ -3,8 +3,8 @@ import { Button, Label, Textarea, TextInput, Checkbox, Select } from 'flowbite-r
 import ImageUpload from 'src/components/ImageUpload';
 import { createProduct, getProductById, UpdateProduct } from 'src/AxiosConfig/AxiosConfig';
 import { useLocation, useNavigate } from 'react-router';
-import Spinner from '../spinner/Spinner';
 import { Toast } from 'src/components/Toast';
+import Spinner from '../spinner/Spinner';
 
 interface ProductFormData {
   name: string;

@@ -8,6 +8,9 @@ import Product from 'src/views/ProductList/page';
 import CreateBlog from 'src/views/CreateBlog/page';
 import Blogs from 'src/views/Blogs/page';
 import Contact from 'src/views/Contact/page';
+import Category from 'src/views/Category/page';
+import Material from 'src/views/Material/page';
+import Size from 'src/views/Size/page';
 import ProtectedRoute from 'src/components/ProtectedRoute/ProtectedRoute';
 
 const FullLayout = Loadable(lazy(() => import('../layouts/full/FullLayout')));
@@ -74,6 +77,30 @@ const Router = [
         element: (
           <ProtectedRoute>
             <Contact />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: '/category',
+        element: (
+          <ProtectedRoute>
+            <Category />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: '/material',
+        element: (
+          <ProtectedRoute>
+            <Material />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: '/size',
+        element: (
+          <ProtectedRoute>
+            <Size />
           </ProtectedRoute>
         ),
       },

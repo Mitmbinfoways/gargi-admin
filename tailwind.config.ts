@@ -56,6 +56,11 @@ const config: Config = {
       gap: {
         "30": "30px",
       },
+      animation: {
+        spin: "spin 1s linear infinite",
+        "spin-slow": "spin 1.2s linear infinite",
+        "spin-slower": "spin 1.4s linear infinite",
+      },
       padding: {
         "30": "30px",
       },

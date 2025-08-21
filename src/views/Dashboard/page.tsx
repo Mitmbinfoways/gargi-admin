@@ -1,5 +1,5 @@
 import { Icon } from '@iconify/react/dist/iconify.js';
-import Spinner from '../spinner/Spinner';
+import { Spinner } from 'flowbite-react';
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { getCounts } from 'src/AxiosConfig/AxiosConfig';

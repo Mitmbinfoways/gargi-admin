@@ -2,12 +2,12 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import NoDataFound from "src/components/NoDataFound";
 import { MdDelete, MdModeEdit } from "react-icons/md";
-import Spinner from "../spinner/Spinner";
 import { deleteProduct, getProducts, UpdateProduct } from "src/AxiosConfig/AxiosConfig";
 import { ToggleSwitch } from "flowbite-react";
 import DeleteDialog from "src/components/DeleteDialog";
 import Pagination from "src/components/Pagination";
 import { Toast } from "src/components/Toast";
+import Spinner from "../spinner/Spinner";
 
 const Page = () => {
   const [loading, setLoading] = useState(false);
