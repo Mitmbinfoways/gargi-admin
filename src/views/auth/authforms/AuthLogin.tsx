@@ -54,7 +54,6 @@ const AuthLogin = () => {
         </div>
         <TextInput
           id="email"
-          type="email"
           sizing="md"
           value={email}
           onChange={(e) => {
@@ -64,7 +63,6 @@ const AuthLogin = () => {
             }
           }}
         />
-
         {formErrors.email && <p className="text-red-600">{formErrors.email}</p>}
       </div>
 
