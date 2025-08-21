@@ -1,7 +1,7 @@
 import { Icon } from '@iconify/react/dist/iconify.js';
-import { Spinner } from 'flowbite-react';
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import Spinner from "../spinner/Spinner";
 import { getCounts } from 'src/AxiosConfig/AxiosConfig';
 
 const DashboardPage = () => {
@@ -56,8 +56,8 @@ const DashboardPage = () => {
       <h1 className="text-2xl font-bold mb-6">Dashboard</h1>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
         {loading ? (
-          <div className="col-span-full">
-            <Spinner />
+          <div className="col-span-full bg-white rounded">
+            <Spinner className='h-[70vh]'/>
           </div>
         ) : (
           cardData.map((card, index) => (

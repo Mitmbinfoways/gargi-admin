@@ -43,8 +43,6 @@ const page: React.FC = () => {
     update: "",
     delete: "",
   });
-
-  console.log(error)
   const [showSizeForm, setShowSizeForm] = useState<boolean>(false);
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [editSizeId, setEditSizeId] = useState<string | null>(null);

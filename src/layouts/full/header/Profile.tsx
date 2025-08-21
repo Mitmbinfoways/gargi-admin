@@ -2,7 +2,7 @@ import { Dropdown } from 'flowbite-react';
 import { Icon } from '@iconify/react';
 import { Link, useNavigate } from 'react-router';
 import { useDispatch } from 'react-redux';
-import { logout } from 'src/Store/Slices/AdminUser';
+import { logout } from 'src/Store/Slices/AdminUser.Slice';
 import logo from "../../../../public/logo.png"
 
 

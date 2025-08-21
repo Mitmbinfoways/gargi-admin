@@ -199,12 +199,13 @@ export const createCategory = (data: any) => {
   return axiosInstance.post("/api/v1/category", data)
 }
 
-export const getAllCategorys = (data: any) => {
-  const { search, isActive } = data
-  return axiosInstance.get(`/api/v1/category?search=${search}&isActive=${isActive}`)
-}
+export const getAllCategorys = (data?: any) => {
+  const { search = "", isActive = "" } = data || {};
+  return axiosInstance.get(`/api/v1/category?search=${search}&isActive=${isActive}`);
+};
 
-export const updateCategory = (data: any) => {
+
+export const updateCategory = (data?: any) => {
   const { id } = data
   return axiosInstance.put(`/api/v1/category/${id}`, data)
 }
@@ -217,8 +218,8 @@ export const createMaterial = (data: any) => {
   return axiosInstance.post("/api/v1/material", data)
 }
 
-export const getAllMaterial = (data: any) => {
-  const { search, isActive } = data
+export const getAllMaterial = (data?: any) => {
+  const { search = "", isActive = "" } = data || {};
   return axiosInstance.get(`/api/v1/material?search=${search}&isActive=${isActive}`)
 }
 
@@ -235,8 +236,8 @@ export const createSize = (data: any) => {
   return axiosInstance.post("/api/v1/size", data)
 }
 
-export const getAllSize = (data: any) => {
-  const { search, isActive } = data
+export const getAllSize = (data?: any) => {
+  const { search = "", isActive = "" } = data || {};
   return axiosInstance.get(`/api/v1/size?search=${search}&isActive=${isActive}`)
 }
 

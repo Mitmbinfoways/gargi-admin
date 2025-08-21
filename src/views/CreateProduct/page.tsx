@@ -5,6 +5,8 @@ import { createProduct, getProductById, UpdateProduct } from 'src/AxiosConfig/Ax
 import { useLocation, useNavigate } from 'react-router';
 import { Toast } from 'src/components/Toast';
 import Spinner from '../spinner/Spinner';
+import { useSelector } from 'react-redux';
+import { RootState } from 'src/Store/Store';
 
 interface ProductFormData {
   name: string;
@@ -43,6 +45,10 @@ function Page() {
   const [imagePreviews, setImagePreviews] = useState<string[]>([]);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [loading, setLoading] = useState(false);
+
+  const { category,
+    material,
+    size } = useSelector((state: RootState) => state.options)
 
   const handleChange = (field: keyof ProductFormData, value: any) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
@@ -213,17 +219,12 @@ function Page() {
                   onChange={(e) => handleChange('category', e.target.value)}
                   color={errors.category ? 'failure' : undefined}
                 >
-                  <option value="">Select category</option>
-                  <option value="Plates">Plates</option>
-                  <option value="Bowls">Bowls</option>
-                  <option value="SpoonsAndForks">Spoons & Forks</option>
-                  <option value="Knives">Knives</option>
-                  <option value="Containers">Containers</option>
-                  <option value="Cups">Cups</option>
-                  <option value="Trays">Trays</option>
-                  <option value="Straws">Straws</option>
-                  <option value="NapkinsAndTissues">Napkins & Tissues</option>
-                  <option value="PartyPackAndCombos">Party Pack & Combos</option>
+                  <option value="">Select material</option>
+                  {category?.map((c: any, i: number) => (
+                    <option key={i} value={c?.name}>
+                      {c?.name}
+                    </option>
+                  ))}
                 </Select>
                 {errors.category && (
                   <p className="text-red-600 mt-1 text-sm">{errors.category}</p>
@@ -240,12 +241,11 @@ function Page() {
                   color={errors.material ? 'failure' : undefined}
                 >
                   <option value="">Select material</option>
-                  <option value="Paper">Paper</option>
-                  <option value="Plastic">Plastic</option>
-                  <option value="Foam">Foam</option>
-                  <option value="Biodegradable">Biodegradable</option>
-                  <option value="Palm Leaf">Palm Leaf</option>
-                  <option value="Bamboo">Bamboo</option>
+                  {material?.map((m: any, i: number) => (
+                    <option key={i} value={m?.name}>
+                      {m?.name}
+                    </option>
+                  ))}
                 </Select>
                 {errors.material && (
                   <p className="text-red-600 mt-1 text-sm">{errors.material}</p>
@@ -299,10 +299,11 @@ function Page() {
                 onChange={(e) => handleChange('size', e.target.value)}
               >
                 <option value="">Select size</option>
-                <option value="Small">Small</option>
-                <option value="Medium">Medium</option>
-                <option value="Large">Large</option>
-                <option value="Extra Large">Extra Large</option>
+                {size?.map((s: any, i: number) => (
+                  <option key={i} value={s?.name}>
+                    {s?.name}
+                  </option>
+                ))}
               </Select>
             </div>
             <div>

@@ -1,13 +1,16 @@
-import { FC } from "react";
-import "./spinner.css";
+import { Spinner } from "flowbite-react";
 
-const Spinner: FC = () => (
-  <div className="fallback-spinner">
-    <div className="loading component-loader">
-      <div className="effect-1 effects" />
-      <div className="effect-2 effects" />
-      <div className="effect-3 effects" />
+const Loading = ({ className = "", size = "xl" }) => {
+  return (
+    <div
+      className={`flex items-center justify-center py-6 ${className}`}
+    >
+      <Spinner
+        size={size}
+        aria-label="Loading spinner"
+      />
     </div>
-  </div>
-);
-export default Spinner;
+  );
+};
+
+export default Loading;

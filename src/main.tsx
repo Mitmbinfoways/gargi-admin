@@ -7,7 +7,7 @@ import { store } from './Store/Store.tsx';
 import { Provider } from 'react-redux';
 
 createRoot(document.getElementById('root')!).render(
-  <Suspense fallback={<Spinner />}>
+  <Suspense fallback={<Spinner className='h-[100vh]' />}>
     <Provider store={store}>
       <App />
     </Provider>

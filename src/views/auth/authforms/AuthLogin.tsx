@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Button, Label, Spinner, TextInput } from 'flowbite-react';
 import {  useNavigate } from 'react-router-dom';
 import { Login } from 'src/AxiosConfig/AxiosConfig';
-import { login } from 'src/Store/Slices/AdminUser';
+import { login } from 'src/Store/Slices/AdminUser.Slice';
 import { useDispatch } from 'react-redux';
 import { HiEye, HiEyeOff } from 'react-icons/hi';
 

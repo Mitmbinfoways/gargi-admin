@@ -1,11 +1,34 @@
+import { useEffect } from 'react';
 import { RouterProvider } from 'react-router-dom';
 import { Flowbite, ThemeModeScript } from 'flowbite-react';
 import customTheme from './utils/theme/custom-theme';
 import router from './routes/Router';
 import { Toaster } from 'react-hot-toast';
+import { useDispatch } from 'react-redux';
+import { getAllCategorys, getAllMaterial, getAllSize } from './AxiosConfig/AxiosConfig';
+import { setCategory, setMaterial, setSize } from './Store/Slices/ProductOptions.Slice';
 
 function App() {
+  const dispatch = useDispatch();
 
+  const fetchOptions = async () => {
+    try {
+      const [categoryRes, materialRes, sizeRes] = await Promise.all([
+        getAllCategorys(),
+        getAllMaterial(),
+        getAllSize(),
+      ]);
+      dispatch(setCategory(categoryRes.data.data || []));
+      dispatch(setMaterial(materialRes.data.data || []));
+      dispatch(setSize(sizeRes.data.data || []));
+    } catch (error) {
+      console.error("Error fetching options:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchOptions();
+  }, []);
 
   return (
     <>

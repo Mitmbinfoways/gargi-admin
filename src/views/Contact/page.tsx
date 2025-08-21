@@ -51,7 +51,7 @@ const page = () => {
                         {loading ? (
                             <tr>
                                 <td colSpan={6} className="text-center py-6">
-                                    <Spinner />
+                                    <Spinner className='h-[60vh]'/>
                                 </td>
                             </tr>
                         ) : data.length === 0 ? (
