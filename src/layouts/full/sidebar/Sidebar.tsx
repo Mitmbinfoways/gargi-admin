@@ -1,9 +1,9 @@
-import { Sidebar } from 'flowbite-react';
-import SimpleBar from 'simplebar-react';
-import { Link } from 'react-router-dom';
-import NavItems from './NavItems';
-import SidebarContent from './Sidebaritems';
-import logo from "../../../../public/logo.png"
+import { Sidebar } from "flowbite-react";
+import SimpleBar from "simplebar-react";
+import { Link } from "react-router-dom";
+import NavItems from "./NavItems";
+import SidebarContent from "./Sidebaritems";
+import logo from "../../../../public/logo.png";
 
 const SidebarLayout = () => {
   return (
@@ -14,7 +14,7 @@ const SidebarLayout = () => {
       >
         <div className="px-4 py-5 flex items-center justify-center">
           <Link to="/">
-            <img alt='Logo' src={logo} className='w-full h-8' />
+            <img alt="Logo" src={logo} className="w-full h-8" />
           </Link>
         </div>
         <SimpleBar className="h-[calc(100vh-80px)] py-5">

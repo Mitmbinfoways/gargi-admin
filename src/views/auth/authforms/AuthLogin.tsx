@@ -5,6 +5,7 @@ import { Login } from 'src/AxiosConfig/AxiosConfig';
 import { login } from 'src/Store/Slices/AdminUser.Slice';
 import { useDispatch } from 'react-redux';
 import { HiEye, HiEyeOff } from 'react-icons/hi';
+import { Toast } from 'src/components/Toast';
 
 const AuthLogin = () => {
   const [email, setEmail] = useState('');
@@ -39,6 +40,7 @@ const AuthLogin = () => {
       sessionStorage.setItem('token', token);
       sessionStorage.setItem('admin', JSON.stringify(admin));
       navigate('/');
+      Toast({ message: 'Login Successfull', type: 'success' })
     } catch (error: any) {
       setErrorMsg('Incorrect email or password. Please try again.');
     } finally {
@@ -98,7 +100,7 @@ const AuthLogin = () => {
         {formErrors.password && <p className="text-red-600">{formErrors.password}</p>}
       </div>
 
-      <div className="flex justify-end my-5">
+      <div className="flex justify-end my-2">
         {/* <div className="flex items-center gap-2">
           <Checkbox
             id="accept"
