@@ -96,14 +96,14 @@ const Router = [
           </ProtectedRoute>
         ),
       },
-      {
-        path: '/size',
-        element: (
-          <ProtectedRoute>
-            <Size />
-          </ProtectedRoute>
-        ),
-      },
+      // {
+      //   path: '/size',
+      //   element: (
+      //     <ProtectedRoute>
+      //       <Size />
+      //     </ProtectedRoute>
+      //   ),
+      // },
       { path: '*', element: <Navigate to="/auth/404" /> },
     ],
   },

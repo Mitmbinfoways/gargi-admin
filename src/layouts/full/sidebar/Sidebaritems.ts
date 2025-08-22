@@ -72,12 +72,12 @@ const SidebarContent: MenuItem[] = [
         id: "manage-material",
         url: "/material",
       },
-      {
-        name: 'Manage Size',
-        icon: getIconByName('Size'),
-        id: 'manage-query',
-        url: '/size',
-      },
+      // {
+      //   name: 'Manage Size',
+      //   icon: getIconByName('Size'),
+      //   id: 'manage-query',
+      //   url: '/size',
+      // },
       // {
       //   name: 'Blogs',
       //   icon: getIconByName('Blog'),

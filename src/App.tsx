@@ -5,8 +5,8 @@ import customTheme from './utils/theme/custom-theme';
 import router from './routes/Router';
 import { Toaster } from 'react-hot-toast';
 import { useDispatch, useSelector } from 'react-redux';
-import { getAllCategorys, getAllMaterial, getAllSize } from './AxiosConfig/AxiosConfig';
-import { setCategory, setMaterial, setSize } from './Store/Slices/ProductOptions.Slice';
+import { getAllCategorys, getAllMaterial } from './AxiosConfig/AxiosConfig';
+import { setCategory, setMaterial } from './Store/Slices/ProductOptions.Slice';
 import { RootState } from './Store/Store';
 
 function App() {
@@ -15,14 +15,12 @@ function App() {
 
   const fetchOptions = async () => {
     try {
-      const [categoryRes, materialRes, sizeRes] = await Promise.all([
+      const [categoryRes, materialRes] = await Promise.all([
         getAllCategorys(),
         getAllMaterial(),
-        getAllSize(),
       ]);
-      dispatch(setCategory(categoryRes.data.data || []));
-      dispatch(setMaterial(materialRes.data.data || []));
-      dispatch(setSize(sizeRes.data.data || []));
+      dispatch(setCategory(categoryRes.data.data.categories || []));
+      dispatch(setMaterial(materialRes.data.data.materials || []));
     } catch (error) {
       console.error("Error fetching options:", error);
     }

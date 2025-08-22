@@ -58,7 +58,6 @@ const Page: React.FC = () => {
     const [currentPage, setCurrentPage] = useState<number>(1);
     const [totalPages, setTotalPages] = useState<number>(1);
     const [limit, setLimit] = useState<number>(10);
-
     const search = useDebounce(searchTerm, 300)
 
     const fetchCategories = async () => {
@@ -72,11 +71,12 @@ const Page: React.FC = () => {
             };
             const res = await getAllCategorys(data);
             if (res?.data) {
-                const sorted = (res.data.data || []).sort(
+                const sorted = (res.data.data.categories || []).sort(
                     (a: Category, b: Category) =>
                         new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
                 );
                 setCategoryList(sorted);
+                console.log(res.data.data)
                 setTotalPages(res.data.data.pagination?.totalPages || 1)
             }
         } catch (err) {

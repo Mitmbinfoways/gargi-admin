@@ -25,7 +25,8 @@ const Page = () => {
     try {
       const params = { page, limit: perPage };
       const response = await getAllQuarys(params);
-      setData(response.data.data.queries || response.data.data || []);
+      console.log(response)
+      setData(response.data.data.contacts || response.data.data || []);
       setTotalPages(response.data.data.pagination?.totalPages || 1);
     } catch (error) {
       console.error("Error fetching data:", error);

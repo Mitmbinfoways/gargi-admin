@@ -67,7 +67,7 @@ const MaterialPage: React.FC = () => {
       }
       const res = await getAllMaterial(data);
       if (res?.status === 200) {
-        const sorted = (res.data.data || []).sort(
+        const sorted = (res.data.data.materials || []).sort(
           (a: Material, b: Material) =>
             new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
         );

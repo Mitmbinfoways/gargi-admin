@@ -44,7 +44,7 @@ function Page() {
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [loading, setLoading] = useState(false);
 
-  const { category, material, size } = useSelector((state: RootState) => state.options);
+  const { category, material } = useSelector((state: RootState) => state.options);
 
   console.log(category)
 
@@ -271,20 +271,15 @@ function Page() {
                 )}
               </div>
 
-              {/* Size Dropdown */}
+              {/* Size Text Field */}
               <div>
                 <Label className="mb-1 block">Size</Label>
-                <Select
+                <TextInput
+                  type="text"
+                  placeholder="Enter size"
                   value={formData.size}
                   onChange={(e) => handleChange("size", e.target.value)}
-                >
-                  <option value="">Select size</option>
-                  {size && size.length > 0 && size.map((c: any, i: number) => (
-                    <option key={i} value={c?.name}>
-                      {c?.name}
-                    </option>
-                  ))}
-                </Select>
+                />
               </div>
             </div>
 
