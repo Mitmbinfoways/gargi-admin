@@ -5,7 +5,6 @@ import { useDispatch } from 'react-redux';
 import { logout } from 'src/Store/Slices/AdminUser.Slice';
 import logo from "../../../../public/logo.png"
 
-
 const Profile = () => {
   const navigation = useNavigate();
   const dispatch = useDispatch();

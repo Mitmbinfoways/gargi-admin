@@ -106,7 +106,7 @@ const Page = () => {
               data.map((product, index) => (
                 <tr key={product._id}>
                   <td className="px-4 py-3 whitespace-nowrap">
-                    {(currentPage - 1) * limit + index + 1} {/* ✅ Fixed Index */}
+                    {(currentPage - 1) * limit + index + 1} 
                   </td>
                   <td className="px-4 py-3 whitespace-nowrap">
                     {product.image?.[0] ? (

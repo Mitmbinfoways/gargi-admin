@@ -177,7 +177,7 @@ export const getBlogById = async (id: any) => {
 };
 
 export const getUserProfile = async (id: any) => {
-  return axiosInstance.get(`/api/v1/profile/${id}`);
+  return axiosInstance.get(`/api/v1/admin/profile/${id}`);
 };
 
 export const updateUserProfile = async (data: any) => {

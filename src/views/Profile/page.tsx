@@ -20,13 +20,11 @@ const Profile: React.FC = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [isChangingPassword, setIsChangingPassword] = useState(false);
   const [profile, setProfile] = useState<UserProfile | null>(null);
-
   const [formData, setFormData] = useState({
     name: '',
     email: '',
     avatar: '',
   });
-
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [passwordData, setPasswordData] = useState({
     oldPassword: '',
@@ -129,7 +127,9 @@ const Profile: React.FC = () => {
   return (
     <div className="flex px-4 py-8">
       {isLoading ? (
-        <Spinner />
+        <div className='bg-white rounded w-full'>
+          <Spinner className='h-96' />
+        </div>
       ) : (
         <div className="w-full max-w-lg">
           {isEditing ? (

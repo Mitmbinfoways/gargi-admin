@@ -76,7 +76,6 @@ const Page: React.FC = () => {
                         new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
                 );
                 setCategoryList(sorted);
-                console.log(res.data.data)
                 setTotalPages(res.data.data.pagination?.totalPages || 1)
             }
         } catch (err) {
@@ -98,10 +97,10 @@ const Page: React.FC = () => {
 
             const res = await createCategory({ name: categoryInput.trim() });
             if (res?.status === 201 || res?.status === 200) {
-                const newCategory: Category = res.data.data || res.data;
-                setCategoryList((prev) => [newCategory, ...prev]);
                 setCategoryInput("");
                 setShowCategoryForm(false);
+                setCurrentPage(1);
+                await fetchCategories();
             }
         } catch (err: any) {
             console.error("Error creating category:", err);
@@ -174,6 +173,7 @@ const Page: React.FC = () => {
                 );
                 setIsDeleteDialogOpen(false);
                 setSelectedDeleteId(null);
+                fetchCategories()
             }
         } catch (err: any) {
             console.error("Error deleting category:", err);
@@ -302,7 +302,7 @@ const Page: React.FC = () => {
                                     </div>
                                 ) : (
                                     <>
-                                        <span className="flex gap-5"> <span>{index + 1}</span>{category.name}</span>
+                                        <span className="flex gap-5"> <span>{(currentPage - 1) * limit + index + 1}</span>{category.name}</span>
                                         <div className="flex gap-3 items-center">
                                             <MdModeEdit
                                                 onClick={() => handleEditClick(category)}

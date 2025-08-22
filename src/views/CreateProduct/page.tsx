@@ -1,12 +1,13 @@
 import { useEffect, useState } from 'react';
 import { Button, Label, Textarea, TextInput, Select, ToggleSwitch } from 'flowbite-react'; // ✅ Use ToggleSwitch instead of Checkbox
 import ImageUpload from 'src/components/ImageUpload';
-import { createProduct, getProductById, UpdateProduct } from 'src/AxiosConfig/AxiosConfig';
+import { createProduct, getAllCategorys, getAllMaterial, getProductById, UpdateProduct } from 'src/AxiosConfig/AxiosConfig';
 import { useLocation, useNavigate } from 'react-router';
 import { Toast } from 'src/components/Toast';
 import Spinner from '../../components/Spinner';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from 'src/Store/Store';
+import { setCategory, setMaterial } from 'src/Store/Slices/ProductOptions.Slice';
 
 interface ProductFormData {
   name: string;
@@ -39,14 +40,12 @@ function Page() {
   const location = useLocation();
   const { id } = location.state || {};
   const navigate = useNavigate();
-
+  const dispatch = useDispatch();
   const [imagePreviews, setImagePreviews] = useState<string[]>([]);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [loading, setLoading] = useState(false);
 
   const { category, material } = useSelector((state: RootState) => state.options);
-
-  console.log(category)
 
   const handleChange = (field: keyof ProductFormData, value: any) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
@@ -158,6 +157,26 @@ function Page() {
       fetchProduct();
     }
   }, [id]);
+
+  const fetchOptions = async () => {
+    try {
+      const data = {
+        isActive: true
+      }
+      const [categoryRes, materialRes] = await Promise.all([
+        getAllCategorys(data),
+        getAllMaterial(data),
+      ]);
+      dispatch(setCategory(categoryRes.data.data.categories || []));
+      dispatch(setMaterial(materialRes.data.data.materials || []));
+    } catch (error) {
+      console.error("Error fetching options:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchOptions();
+  }, []);
 
   return (
     <div className="bg-white p-4 sm:p-6 rounded-lg shadow-md">

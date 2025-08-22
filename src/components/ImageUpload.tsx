@@ -19,7 +19,9 @@ export default function ImageUpload({
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const files = Array.from(e.target.files || []);
+    const files = Array.from(e.target.files || []).filter((file) =>
+      file.type.startsWith("image/")
+    );
 
     if (files.length > 0) {
       onFilesChange(files);
@@ -27,8 +29,27 @@ export default function ImageUpload({
     e.target.value = "";
   };
 
+  const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    e.stopPropagation();
+
+    const files = Array.from(e.dataTransfer.files).filter((file) =>
+      file.type.startsWith("image/")
+    );
+
+    if (files.length > 0) {
+      onFilesChange(files);
+    }
+  };
+
+  const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    e.stopPropagation();
+  };
+
   return (
     <div className="space-y-4">
+      {/* Preview Section */}
       {previewUrls.length > 0 && (
         <div className="grid grid-cols-4 gap-4">
           {previewUrls.map((preview, index) => (
@@ -52,16 +73,21 @@ export default function ImageUpload({
         </div>
       )}
 
+      {/* Upload Section */}
       <div
-        className="border-2 border-dashed rounded-lg p-6 py-16 text-center flex flex-col justify-center cursor-pointer"
+        className="border-2 border-dashed rounded-lg p-6 py-16 text-center flex flex-col justify-center cursor-pointer transition hover:bg-gray-50"
         onClick={() => fileInputRef.current?.click()}
+        onDrop={handleDrop}
+        onDragOver={handleDragOver}
       >
         <FaUpload className="h-8 w-8 text-gray-500 mx-auto" />
         <span className="text-sm text-gray-500 mt-2">
           Click to upload {multiple ? "images" : "image"} or drag and drop
         </span>
+        <span className="text-xs text-gray-400 mt-1">(Only image files allowed)</span>
       </div>
 
+      {/* Hidden File Input */}
       <input
         ref={fileInputRef}
         type="file"

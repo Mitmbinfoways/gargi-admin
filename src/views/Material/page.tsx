@@ -100,6 +100,7 @@ const MaterialPage: React.FC = () => {
         setMaterialList((prev) => [newMaterial, ...prev]);
         setMaterialInput("");
         setShowMaterialForm(false);
+        fetchMaterials()
       }
     } catch (err: any) {
       console.error("Error creating material:", err);
@@ -167,6 +168,7 @@ const MaterialPage: React.FC = () => {
         );
         setIsDeleteDialogOpen(false);
         setSelectedDeleteId(null);
+        fetchMaterials()
       }
     } catch (err: any) {
       console.error("Error deleting material:", err);
@@ -301,7 +303,7 @@ const MaterialPage: React.FC = () => {
                 ) : (
                   <>
                     <span className="flex gap-5">
-                      <span>{index + 1}</span>{material.name}
+                      <span>{(currentPage - 1) * limit + index + 1}</span>{material.name}
                     </span>
                     <div className="flex gap-3 items-center">
                       <MdModeEdit
