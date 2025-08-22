@@ -213,20 +213,22 @@ const Page: React.FC = () => {
             <div className="mb-4 flex flex-col gap-3">
                 <h2 className="text-lg sm:text-xl font-semibold text-gray-700">Category</h2>
                 <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 sm:gap-0">
-                    <TextInput
+                    {!showCategoryForm && <TextInput
                         className="w-full sm:w-1/3"
                         placeholder="Search Category"
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
-                    />
-                    <Button
-                        color="primary"
-                        size="sm"
-                        className="w-full sm:w-auto"
-                        onClick={() => setShowCategoryForm((prev) => !prev)}
-                    >
-                        {showCategoryForm ? "Cancel" : "Create New Category"}
-                    </Button>
+                    />}
+                    <div className="w-full flex justify-end">
+                        <Button
+                            color="primary"
+                            size="sm"
+                            className="w-full sm:w-auto"
+                            onClick={() => setShowCategoryForm((prev) => !prev)}
+                        >
+                            {showCategoryForm ? "Cancel" : "Create New Category"}
+                        </Button>
+                    </div>
                 </div>
             </div>
 

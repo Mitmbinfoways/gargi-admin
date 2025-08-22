@@ -13,8 +13,7 @@ const NavItems: React.FC<NavItemsProps> = ({ item }) => {
 
   const renderIcon = (icon?: string, size: number = 20) =>
     icon ? <Icon icon={icon} width={size} className="mr-3" /> : null;
-
-  // Check if the current item or any child matches the current path
+  
   const isActive = location.pathname === item.url;
   const isChildActive = item.children?.some((child) => child.url === location.pathname);
 
@@ -36,8 +35,8 @@ const NavItems: React.FC<NavItemsProps> = ({ item }) => {
               as={Link}
               to={child.url || '#'}
               className={`pl-8 flex items-center transition-all duration-200 rounded-md ${isChildSelected
-                  ? 'bg-blue-100 text-blue-600 font-semibold shadow-sm'
-                  : 'text-gray-600 hover:bg-gray-100 hover:text-blue-500'
+                ? 'bg-blue-100 text-blue-600 font-semibold shadow-sm'
+                : 'text-gray-600 hover:bg-gray-100 hover:text-blue-500'
                 }`}
             >
               <div className="flex items-center">
@@ -57,8 +56,8 @@ const NavItems: React.FC<NavItemsProps> = ({ item }) => {
       to={item.url || '#'}
       key={item.id}
       className={`flex items-center transition-all duration-200 rounded-md ${isActive
-          ? 'bg-blue-100 text-blue-600 font-semibold '
-          : 'text-gray-700 hover:bg-gray-100 hover:text-blue-500'
+        ? 'bg-blue-100 text-blue-600 font-semibold '
+        : 'text-gray-700 hover:bg-gray-100 hover:text-blue-500'
         }`}
     >
       <div className="flex items-center">

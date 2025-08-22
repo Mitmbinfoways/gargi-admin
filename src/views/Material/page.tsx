@@ -213,20 +213,22 @@ const MaterialPage: React.FC = () => {
       <div className="mb-4 flex flex-col gap-3">
         <h2 className="text-lg sm:text-xl font-semibold text-gray-700">Material</h2>
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 sm:gap-0">
-          <TextInput
+          {!showMaterialForm && <TextInput
             className="w-full sm:w-1/3"
             placeholder="Search Material"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-          />
-          <Button
-            color="primary"
-            size="sm"
-            className="w-full sm:w-auto"
-            onClick={() => setShowMaterialForm((prev) => !prev)}
-          >
-            {showMaterialForm ? "Cancel" : "Create New Material"}
-          </Button>
+          />}
+          <div className="w-full flex justify-end">
+            <Button
+              color="primary"
+              size="sm"
+              className="w-full sm:w-auto"
+              onClick={() => setShowMaterialForm((prev) => !prev)}
+            >
+              {showMaterialForm ? "Cancel" : "Create New Material"}
+            </Button>
+          </div>
         </div>
       </div>
 
