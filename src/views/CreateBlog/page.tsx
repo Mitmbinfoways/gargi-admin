@@ -5,7 +5,7 @@ import { Button, Label, Textarea, TextInput } from "flowbite-react";
 import ImageUpload from "src/components/ImageUpload";
 import { createBlog, getBlogById, UpdateBlogs } from "src/AxiosConfig/AxiosConfig";
 import { useLocation, useNavigate } from "react-router";
-import Spinner from "../spinner/Spinner";
+import Spinner from "../../components/Spinner";
 
 function Page() {
   const location = useLocation();

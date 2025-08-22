@@ -1,6 +1,5 @@
-import { FaArrowLeft, FaArrowRight } from 'react-icons/fa';
+import React from "react";
 
-// Define the props interface
 interface PaginationProps {
   currentPage: number;
   totalPages: number;
@@ -8,56 +7,77 @@ interface PaginationProps {
 }
 
 const Pagination: React.FC<PaginationProps> = ({ currentPage, totalPages, onPageChange }) => {
-  const pageNumbers: number[] = [];
+  const getPageNumbers = () => {
+    const maxVisiblePages = 5;
+    let startPage = Math.max(1, currentPage - Math.floor(maxVisiblePages / 2));
+    let endPage = Math.min(totalPages, startPage + maxVisiblePages - 1);
 
-  for (let i = 1; i <= totalPages; i++) {
-    pageNumbers.push(i);
-  }
-
-  const handlePrev = (): void => {
-    if (currentPage > 1) {
-      onPageChange(currentPage - 1);
+    if (endPage - startPage + 1 < maxVisiblePages) {
+      startPage = Math.max(1, endPage - maxVisiblePages + 1);
     }
+
+    return {
+      pages: Array.from({ length: endPage - startPage + 1 }, (_, i) => startPage + i),
+      startPage,
+      endPage,
+    };
   };
 
-  const handleNext = (): void => {
-    if (currentPage < totalPages) {
-      onPageChange(currentPage + 1);
-    }
-  };
+  const { pages, endPage } = getPageNumbers();
 
   return (
-    <div className="flex items-center justify-center gap-2 my-4">
+    <nav className="p-1 flex justify-center text-black items-center space-x-2 rounded-lg">
       <button
-        onClick={handlePrev}
+        onClick={() => onPageChange(currentPage - 1)}
         disabled={currentPage === 1}
-        className="p-2 rounded-md bg-gray-200 text-gray-600 hover:bg-gray-300 disabled:bg-gray-100 disabled:text-gray-400 transition-colors"
+        className="disabled:opacity-50 hover:bg-blue-100 p-2 rounded-full transition"
       >
-        <FaArrowLeft />
+        &lt;
       </button>
 
-      {pageNumbers.map((number ,i) => (
+      {/* First Page Button */}
+      {pages[0] > 1 && (
+        <>
+          <button
+            onClick={() => onPageChange(1)}
+            className={`px-3 py-1 rounded-full ${currentPage === 1 ? "bg-blue-600 text-white" : "hover:bg-blue-100"
+              }`}
+          >
+            1
+          </button>
+          {pages[0] > 2 && <span className="text-gray-400">...</span>}
+        </>
+      )}
+      {pages.map((page) => (
         <button
-          key={i}
-          onClick={() => onPageChange(number)}
-          className={`p-2 px-3 rounded-md ${
-            Number(currentPage) === number
-              ? 'bg-primary text-white'
-              : 'bg-gray-200 text-gray-600 hover:bg-gray-300'
-          } transition-colors`}
+          key={page}
+          onClick={() => onPageChange(page)}
+          className={`px-3 py-1 rounded-full ${currentPage === page ? "bg-blue-600 text-white" : "hover:bg-blue-100"
+            }`}
         >
-          {number}
+          {page}
         </button>
       ))}
-
+      {endPage < totalPages && (
+        <>
+          {endPage < totalPages - 1 && <span className="text-gray-400">...</span>}
+          <button
+            onClick={() => onPageChange(totalPages)}
+            className={`px-3 py-1 rounded-full ${currentPage === totalPages ? "bg-blue-600 text-white" : "hover:bg-blue-100"
+              }`}
+          >
+            {totalPages}
+          </button>
+        </>
+      )}
       <button
-        onClick={handleNext}
+        onClick={() => onPageChange(currentPage + 1)}
         disabled={currentPage === totalPages}
-        className="p-2 rounded-md bg-gray-200 text-gray-600 hover:bg-gray-300 disabled:bg-gray-100 disabled:text-gray-400 transition-colors"
+        className="disabled:opacity-50 hover:bg-blue-100 p-2 rounded-full transition"
       >
-        <FaArrowRight />
+        &gt;
       </button>
-    </div>
+    </nav>
   );
 };
 

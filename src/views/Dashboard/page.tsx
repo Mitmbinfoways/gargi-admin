@@ -1,7 +1,7 @@
 import { Icon } from '@iconify/react/dist/iconify.js';
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import Spinner from "../spinner/Spinner";
+import Spinner from "../../components/Spinner";
 import { getCounts } from 'src/AxiosConfig/AxiosConfig';
 
 const DashboardPage = () => {
@@ -52,7 +52,7 @@ const DashboardPage = () => {
   }, []);
 
   return (
-    <div className="p-6 relative min-h-screen">
+    <div className="relative">
       <h1 className="text-2xl font-bold mb-6">Dashboard</h1>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
         {loading ? (

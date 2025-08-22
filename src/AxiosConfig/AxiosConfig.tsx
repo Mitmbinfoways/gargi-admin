@@ -191,8 +191,9 @@ export const getCounts = () => {
   return axiosInstance.get(`api/v1/products/dashboard/counts`);
 };
 
-export const getAllQuarys = () => {
-  return axiosInstance.get("/api/v1/contact")
+export const getAllQuarys = (data: any) => {
+  const { page, limit } = data
+  return axiosInstance.get(`/api/v1/contact?page=${page}&limit=${limit}`)
 }
 
 export const createCategory = (data: any) => {
@@ -200,10 +201,9 @@ export const createCategory = (data: any) => {
 }
 
 export const getAllCategorys = (data?: any) => {
-  const { search = "", isActive = "" } = data || {};
-  return axiosInstance.get(`/api/v1/category?search=${search}&isActive=${isActive}`);
+  const { search = "", isActive = "", page, limit } = data || {};
+  return axiosInstance.get(`/api/v1/category?search=${search}&isActive=${isActive}&page=${page}&limit=${limit}`);
 };
-
 
 export const updateCategory = (data?: any) => {
   const { id } = data
@@ -219,8 +219,8 @@ export const createMaterial = (data: any) => {
 }
 
 export const getAllMaterial = (data?: any) => {
-  const { search = "", isActive = "" } = data || {};
-  return axiosInstance.get(`/api/v1/material?search=${search}&isActive=${isActive}`)
+  const { search = "", isActive = "", page, limit } = data || {};
+  return axiosInstance.get(`/api/v1/material?search=${search}&isActive=${isActive}&page=${page}&limit=${limit}`)
 }
 
 export const updateMaterial = (data: any) => {
@@ -237,8 +237,8 @@ export const createSize = (data: any) => {
 }
 
 export const getAllSize = (data?: any) => {
-  const { search = "", isActive = "" } = data || {};
-  return axiosInstance.get(`/api/v1/size?search=${search}&isActive=${isActive}`)
+  const { search = "", isActive = "", page, limit } = data || {};
+  return axiosInstance.get(`/api/v1/size?search=${search}&isActive=${isActive}&page=${page}&limit=${limit}`)
 }
 
 export const updateSize = (data: any) => {

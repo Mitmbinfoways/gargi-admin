@@ -4,7 +4,7 @@ import NoDataFound from "src/components/NoDataFound";
 import { MdDelete, MdModeEdit } from "react-icons/md";
 import { getBlogs, UpdateBlogs, deleteBlogs } from "src/AxiosConfig/AxiosConfig";
 import { ToggleSwitch } from "flowbite-react";
-import Spinner from "../spinner/Spinner";
+import Spinner from "../../components/Spinner";
 
 interface BlogContent {
   _id: string;

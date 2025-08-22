@@ -4,12 +4,14 @@ import { Flowbite, ThemeModeScript } from 'flowbite-react';
 import customTheme from './utils/theme/custom-theme';
 import router from './routes/Router';
 import { Toaster } from 'react-hot-toast';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { getAllCategorys, getAllMaterial, getAllSize } from './AxiosConfig/AxiosConfig';
 import { setCategory, setMaterial, setSize } from './Store/Slices/ProductOptions.Slice';
+import { RootState } from './Store/Store';
 
 function App() {
   const dispatch = useDispatch();
+  const isAuthenticated = useSelector((state: RootState) => state.auth.isAuthenticated);
 
   const fetchOptions = async () => {
     try {
@@ -27,8 +29,10 @@ function App() {
   };
 
   useEffect(() => {
-    fetchOptions();
-  }, []);
+    if (isAuthenticated) {
+      fetchOptions();
+    }
+  }, [isAuthenticated]);
 
   return (
     <>

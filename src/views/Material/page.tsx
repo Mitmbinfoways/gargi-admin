@@ -1,10 +1,11 @@
-import { Button, TextInput, ToggleSwitch, Spinner } from "flowbite-react";
+import { Button, TextInput, ToggleSwitch, Spinner, Select } from "flowbite-react";
 import { useEffect, useState } from "react";
 import { MdDelete, MdModeEdit } from "react-icons/md";
 import NoDataFound from "src/components/NoDataFound";
 import DeleteDialog from "src/components/DeleteDialog";
 import useDebounce from "src/Hook/useDebounce";
 import { createMaterial, deleteMaterial, getAllMaterial, updateMaterial } from "src/AxiosConfig/AxiosConfig";
+import Pagination from "src/components/Pagination";
 
 interface Material {
   _id: string;
@@ -49,19 +50,29 @@ const MaterialPage: React.FC = () => {
   const [editInput, setEditInput] = useState<string>("");
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState<boolean>(false);
   const [selectedDeleteId, setSelectedDeleteId] = useState<string | null>(null);
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [totalPages, setTotalPages] = useState<number>(1);
+  const [limit, setLimit] = useState<number>(10);
 
   const search = useDebounce(searchTerm, 300);
 
   const fetchMaterials = async () => {
     setLoading(true);
     try {
-      const res = await getAllMaterial({ search, isAction: true });
+      const data = {
+        page: currentPage,
+        limit,
+        search,
+        isAction: true
+      }
+      const res = await getAllMaterial(data);
       if (res?.status === 200) {
         const sorted = (res.data.data || []).sort(
           (a: Material, b: Material) =>
             new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
         );
         setMaterialList(sorted);
+        setTotalPages(res.data.data.pagination?.totalPages || 1)
       } else {
         setMaterialList([]);
       }
@@ -188,13 +199,24 @@ const MaterialPage: React.FC = () => {
 
   useEffect(() => {
     fetchMaterials();
-  }, [search]);
+  }, [search, currentPage, limit]);
+
+  const handleLimitChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setLimit(parseInt(e.target.value, 10));
+    setCurrentPage(1);
+  };
 
   return (
     <div>
       <div className="mb-4 flex flex-col gap-3">
+        <h2 className="text-lg sm:text-xl font-semibold text-gray-700">Material</h2>
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 sm:gap-0">
-          <h2 className="text-lg sm:text-xl font-semibold text-gray-700">Material</h2>
+          <TextInput
+            className="w-full sm:w-1/3"
+            placeholder="Search Material"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
           <Button
             color="primary"
             size="sm"
@@ -203,14 +225,6 @@ const MaterialPage: React.FC = () => {
           >
             {showMaterialForm ? "Cancel" : "Create New Material"}
           </Button>
-        </div>
-        <div>
-          <TextInput
-            className="w-full sm:w-1/3"
-            placeholder="Search Material"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-          />
         </div>
       </div>
 
@@ -253,66 +267,84 @@ const MaterialPage: React.FC = () => {
           <NoDataFound />
         </div>
       ) : (
-        <ul className="bg-white shadow-md rounded-md divide-y">
-          {materialList.map((material, index: number) => (
-            <li
-              key={material._id}
-              className="p-4 text-black hover:bg-gray-50 transition-colors duration-200 flex justify-between items-center"
-            >
-              {editMaterialId === material._id ? (
-                <div className="flex items-center gap-3 w-full">
-                  <TextInput
-                    value={editInput}
-                    onChange={(e) => setEditInput(e.target.value)}
-                    className="w-2/3 lg:w-full"
-                    disabled={loadingStates.update === material._id}
-                  />
-                  <Button
-                    size="xs"
-                    color="primary"
-                    disabled={loadingStates.update === material._id}
-                    onClick={() => handleUpdateMaterial(material._id)}
-                  >
-                    {loadingStates.update === material._id ? "Updating..." : "Save"}
-                  </Button>
-                  <Button
-                    size="xs"
-                    color="gray"
-                    onClick={() => setEditMaterialId(null)}
-                  >
-                    Cancel
-                  </Button>
-                </div>
-              ) : (
-                <>
-                  <span className="flex gap-5">
-                    <span>{index + 1}</span>{material.name}
-                  </span>
-                  <div className="flex gap-3 items-center">
-                    <MdModeEdit
-                      onClick={() => handleEditClick(material)}
-                      className="text-black cursor-pointer hover:text-blue-600 transition"
-                      size={18}
-                      title="Edit"
+        <div className="bg-white shadow-md rounded-md">
+          <ul className="divide-y">
+            {materialList.map((material, index: number) => (
+              <li
+                key={material._id}
+                className="p-4 text-black hover:bg-gray-50 transition-colors duration-200 flex justify-between items-center"
+              >
+                {editMaterialId === material._id ? (
+                  <div className="flex items-center gap-3 w-full">
+                    <TextInput
+                      value={editInput}
+                      onChange={(e) => setEditInput(e.target.value)}
+                      className="w-2/3 lg:w-full"
+                      disabled={loadingStates.update === material._id}
                     />
-                    <MdDelete
-                      onClick={() => handleOpenDeleteDialog(material._id)}
-                      className="text-red-600 cursor-pointer hover:text-red-800 transition"
-                      size={18}
-                      title="Delete"
-                    />
-                    <ToggleSwitch
-                      checked={material.isActive}
-                      onChange={() =>
-                        handleToggleStatus(material._id, material.isActive)
-                      }
-                    />
+                    <Button
+                      size="xs"
+                      color="primary"
+                      disabled={loadingStates.update === material._id}
+                      onClick={() => handleUpdateMaterial(material._id)}
+                    >
+                      {loadingStates.update === material._id ? "Updating..." : "Save"}
+                    </Button>
+                    <Button
+                      size="xs"
+                      color="gray"
+                      onClick={() => setEditMaterialId(null)}
+                    >
+                      Cancel
+                    </Button>
                   </div>
-                </>
-              )}
-            </li>
-          ))}
-        </ul>
+                ) : (
+                  <>
+                    <span className="flex gap-5">
+                      <span>{index + 1}</span>{material.name}
+                    </span>
+                    <div className="flex gap-3 items-center">
+                      <MdModeEdit
+                        onClick={() => handleEditClick(material)}
+                        className="text-black cursor-pointer hover:text-blue-600 transition"
+                        size={18}
+                        title="Edit"
+                      />
+                      <MdDelete
+                        onClick={() => handleOpenDeleteDialog(material._id)}
+                        className="text-red-600 cursor-pointer hover:text-red-800 transition"
+                        size={18}
+                        title="Delete"
+                      />
+                      <ToggleSwitch
+                        checked={material.isActive}
+                        onChange={() =>
+                          handleToggleStatus(material._id, material.isActive)
+                        }
+                      />
+                    </div>
+                  </>
+                )}
+              </li>
+            ))}
+          </ul>
+          <div className="flex justify-between items-center p-4">
+            <div />
+            <Pagination
+              currentPage={currentPage}
+              totalPages={totalPages}
+              onPageChange={(page) => setCurrentPage(page)}
+            />
+            <div className="px-12">
+              <Select value={limit} onChange={handleLimitChange}>
+                <option value="10">10</option>
+                <option value="15">15</option>
+                <option value="20">20</option>
+                <option value="25">25</option>
+              </Select>
+            </div>
+          </div>
+        </div>
       )}
 
       <DeleteDialog

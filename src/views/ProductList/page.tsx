@@ -3,25 +3,26 @@ import { useNavigate } from "react-router-dom";
 import NoDataFound from "src/components/NoDataFound";
 import { MdDelete, MdModeEdit } from "react-icons/md";
 import { deleteProduct, getProducts, UpdateProduct } from "src/AxiosConfig/AxiosConfig";
-import { ToggleSwitch } from "flowbite-react";
+import { Select, ToggleSwitch } from "flowbite-react";
 import DeleteDialog from "src/components/DeleteDialog";
 import Pagination from "src/components/Pagination";
 import { Toast } from "src/components/Toast";
-import Spinner from "../spinner/Spinner";
+import Spinner from "../../components/Spinner";
 
 const Page = () => {
   const [loading, setLoading] = useState(false);
   const [data, setData] = useState<any[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
+  const [limit, setLimit] = useState(10); // ✅ NEW: limit state
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
   const [deleteId, setDeleteId] = useState<string | null>(null);
 
-  const fetchData = async (page: number = 1) => {
+  const fetchData = async (page: number = 1, perPage: number = limit) => {
     setLoading(true);
     try {
-      const params = { page, limit: 10 };
+      const params = { page, limit: perPage }; // ✅ Pass dynamic limit
       const res = await getProducts(params);
       setData(res.data.data.products || []);
       setTotalPages(res.data.data.pagination.totalPages);
@@ -32,10 +33,10 @@ const Page = () => {
     }
   };
 
+  // ✅ Fetch data when page or limit changes
   useEffect(() => {
-    fetchData(currentPage);
-  }, [currentPage]);
-
+    fetchData(currentPage, limit);
+  }, [currentPage, limit]);
 
   const handleEdit = (id: string) => {
     navigate("/create-product", { state: { id } });
@@ -50,14 +51,13 @@ const Page = () => {
       if (newData.length === 0 && currentPage > 1) {
         setCurrentPage(currentPage - 1);
       } else {
-        fetchData(currentPage);
+        fetchData(currentPage, limit);
       }
-      Toast({ message: 'Product deleted successfully', type: 'success' });
+      Toast({ message: "Product deleted successfully", type: "success" });
     } catch (error) {
       console.error(error);
     }
   };
-
 
   const handleToggle = async (id: string, checked: boolean) => {
     setData((prev) =>
@@ -71,7 +71,13 @@ const Page = () => {
         prev.map((item) => (item._id === id ? { ...item, isActive: !checked } : item))
       );
     }
-  }
+  };
+
+  const handleLimitChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const newLimit = parseInt(e.target.value, 10);
+    setLimit(newLimit);
+    setCurrentPage(1); // ✅ Reset to page 1 when limit changes
+  };
 
   return (
     <div className="relative min-h-screen">
@@ -85,7 +91,6 @@ const Page = () => {
               <th className="px-4 py-3">Name</th>
               <th className="px-4 py-3">Category</th>
               <th className="px-4 py-3">Material</th>
-              <th className="px-4 py-3">Price/Pack</th>
               <th className="px-4 py-3">Quantity</th>
               <th className="px-4 py-3">Actions</th>
             </tr>
@@ -101,7 +106,7 @@ const Page = () => {
               data.map((product, index) => (
                 <tr key={product._id}>
                   <td className="px-4 py-3 whitespace-nowrap">
-                    {(currentPage - 1) * 10 + index + 1}
+                    {(currentPage - 1) * limit + index + 1} {/* ✅ Fixed Index */}
                   </td>
                   <td className="px-4 py-3 whitespace-nowrap">
                     {product.image?.[0] ? (
@@ -120,7 +125,6 @@ const Page = () => {
                   <td className="px-4 py-3 whitespace-nowrap">{product.name}</td>
                   <td className="px-4 py-3 whitespace-nowrap">{product.category}</td>
                   <td className="px-4 py-3 whitespace-nowrap">{product.material}</td>
-                  <td className="px-4 py-3 whitespace-nowrap">₹{product.pricePerPack}</td>
                   <td className="px-4 py-3 whitespace-nowrap max-w-xs truncate">
                     {product.quantityPerPack || "—"}
                   </td>
@@ -158,13 +162,24 @@ const Page = () => {
             )}
           </tbody>
         </table>
-      </div>
 
-      <Pagination
-        currentPage={currentPage}
-        totalPages={totalPages}
-        onPageChange={(page) => setCurrentPage(page)}
-      />
+        <div className="flex justify-between items-center p-4">
+          <div />
+          <Pagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            onPageChange={(page) => setCurrentPage(page)}
+          />
+          <div className="px-12">
+            <Select value={limit} onChange={handleLimitChange}>
+              <option value="10">10</option>
+              <option value="15">15</option>
+              <option value="20">20</option>
+              <option value="25">25</option>
+            </Select>
+          </div>
+        </div>
+      </div>
 
       {deleteId && (
         <DeleteDialog

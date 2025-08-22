@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react';
-import { Button, Label, Textarea, TextInput, Checkbox, Select } from 'flowbite-react';
+import { Button, Label, Textarea, TextInput, Select, ToggleSwitch } from 'flowbite-react'; // ✅ Use ToggleSwitch instead of Checkbox
 import ImageUpload from 'src/components/ImageUpload';
 import { createProduct, getProductById, UpdateProduct } from 'src/AxiosConfig/AxiosConfig';
 import { useLocation, useNavigate } from 'react-router';
 import { Toast } from 'src/components/Toast';
-import Spinner from '../spinner/Spinner';
+import Spinner from '../../components/Spinner';
 import { useSelector } from 'react-redux';
 import { RootState } from 'src/Store/Store';
 
@@ -15,7 +15,6 @@ interface ProductFormData {
   size?: string;
   color?: string;
   quantityPerPack: string;
-  pricePerPack: string;
   stock?: number;
   description?: string;
   isActive: boolean;
@@ -30,7 +29,6 @@ function Page() {
     material: '',
     size: '',
     quantityPerPack: '',
-    pricePerPack: '',
     description: '',
     isActive: true,
     existingImages: [],
@@ -46,9 +44,9 @@ function Page() {
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [loading, setLoading] = useState(false);
 
-  const { category,
-    material,
-    size } = useSelector((state: RootState) => state.options)
+  const { category, material, size } = useSelector((state: RootState) => state.options);
+
+  console.log(category)
 
   const handleChange = (field: keyof ProductFormData, value: any) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
@@ -89,18 +87,11 @@ function Page() {
 
   const validateForm = () => {
     let newErrors: Record<string, string> = {};
-    const priceNum = Number(formData.pricePerPack);
-    const qtyNum = Number(formData.quantityPerPack);
-
     if (!formData.name.trim()) newErrors.name = 'Name is required';
     else if (formData.name.length < 2)
       newErrors.name = 'Name must be at least 2 characters';
     if (!formData.category) newErrors.category = 'Category is required';
     if (!formData.material) newErrors.material = 'Material is required';
-    if (!formData.pricePerPack || priceNum <= 0)
-      newErrors.pricePerPack = 'Price must be greater than 0';
-    if (!formData.quantityPerPack || qtyNum < 1)
-      newErrors.quantityPerPack = 'Quantity must be greater than 0';
     if (formData.images.length === 0 && formData.existingImages.length === 0)
       newErrors.images = 'At least one image is required';
 
@@ -114,7 +105,6 @@ function Page() {
 
     const submitData = {
       ...formData,
-      pricePerPack: Number(formData.pricePerPack),
       quantityPerPack: Number(formData.quantityPerPack),
     };
 
@@ -137,6 +127,7 @@ function Page() {
 
   const fetchProduct = async () => {
     try {
+      setLoading(true);
       const res = await getProductById(id);
       if (res?.data) {
         const p = res.data.data;
@@ -146,7 +137,6 @@ function Page() {
           material: p.material || '',
           size: p.size || '',
           quantityPerPack: String(p.quantityPerPack || ''),
-          pricePerPack: String(p.pricePerPack || ''),
           description: p.description || '',
           isActive: p.isActive ?? true,
           existingImages: p.image || [],
@@ -154,9 +144,12 @@ function Page() {
         });
         setImagePreviews(p.image || []);
         setIsEdit(true);
+        setLoading(false);
       }
     } catch (error) {
       console.error('Error fetching product:', error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -173,7 +166,9 @@ function Page() {
       </h1>
 
       {loading ? (
-        <Spinner />
+        <div className="bg-white rounded">
+          <Spinner className="h-[60vh]" />
+        </div>
       ) : (
         <form className="space-y-6 sm:space-y-8" onSubmit={handleSubmit} noValidate>
           {/* Images + Basic Info */}
@@ -219,8 +214,8 @@ function Page() {
                   onChange={(e) => handleChange('category', e.target.value)}
                   color={errors.category ? 'failure' : undefined}
                 >
-                  <option value="">Select material</option>
-                  {category?.map((c: any, i: number) => (
+                  <option value="">Select category</option>
+                  {category && category.length > 0 && category.map((c: any, i: number) => (
                     <option key={i} value={c?.name}>
                       {c?.name}
                     </option>
@@ -241,9 +236,9 @@ function Page() {
                   color={errors.material ? 'failure' : undefined}
                 >
                   <option value="">Select material</option>
-                  {material?.map((m: any, i: number) => (
-                    <option key={i} value={m?.name}>
-                      {m?.name}
+                  {material && material.length > 0 && material.map((c: any, i: number) => (
+                    <option key={i} value={c?.name}>
+                      {c?.name}
                     </option>
                   ))}
                 </Select>
@@ -254,82 +249,90 @@ function Page() {
             </div>
           </div>
 
-          {/* Pricing + Quantity */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-              <Label className="mb-1 block">
-                Price Per Pack <span className="text-red-600">*</span>
-              </Label>
-              <TextInput
-                type="number"
-                placeholder="Enter price"
-                value={formData.pricePerPack}
-                onChange={(e) => handleChange('pricePerPack', e.target.value)}
-                onWheel={(e) => e.currentTarget.blur()}
-                color={errors.pricePerPack ? 'failure' : undefined}
-              />
-              {errors.pricePerPack && (
-                <p className="text-red-600 mt-1 text-sm">{errors.pricePerPack}</p>
-              )}
-            </div>
-            <div>
-              <Label className="mb-1 block">
-                Quantity Per Pack <span className="text-red-600">*</span>
-              </Label>
-              <TextInput
-                type="number"
-                placeholder="Enter quantity"
-                value={formData.quantityPerPack}
-                onChange={(e) => handleChange('quantityPerPack', e.target.value)}
-                onWheel={(e) => e.currentTarget.blur()}
-                color={errors.quantityPerPack ? 'failure' : undefined}
-              />
-              {errors.quantityPerPack && (
-                <p className="text-red-600 mt-1 text-sm">{errors.quantityPerPack}</p>
-              )}
-            </div>
-          </div>
+          {/* Quantity */}
+          <div className="flex gap-6">
+            {/* Left Column */}
+            <div className="flex flex-col gap-4 w-1/2">
+              {/* Quantity Per Pack */}
+              <div>
+                <Label className="mb-1 block">
+                  Quantity Per Pack
+                </Label>
+                <TextInput
+                  type="number"
+                  placeholder="Enter quantity"
+                  value={formData.quantityPerPack}
+                  onChange={(e) => handleChange("quantityPerPack", e.target.value)}
+                  onWheel={(e) => e.currentTarget.blur()}
+                  color={errors.quantityPerPack ? "failure" : undefined}
+                />
+                {errors.quantityPerPack && (
+                  <p className="text-red-600 mt-1 text-sm">{errors.quantityPerPack}</p>
+                )}
+              </div>
 
-          {/* Size + Description */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-              <Label className="mb-1 block">Size</Label>
-              <Select
-                value={formData.size}
-                onChange={(e) => handleChange('size', e.target.value)}
-              >
-                <option value="">Select size</option>
-                {size?.map((s: any, i: number) => (
-                  <option key={i} value={s?.name}>
-                    {s?.name}
-                  </option>
-                ))}
-              </Select>
+              {/* Size Dropdown */}
+              <div>
+                <Label className="mb-1 block">Size</Label>
+                <Select
+                  value={formData.size}
+                  onChange={(e) => handleChange("size", e.target.value)}
+                >
+                  <option value="">Select size</option>
+                  {size && size.length > 0 && size.map((c: any, i: number) => (
+                    <option key={i} value={c?.name}>
+                      {c?.name}
+                    </option>
+                  ))}
+                </Select>
+              </div>
             </div>
-            <div>
+
+            {/* Right Column */}
+            <div className="flex-1">
               <Label className="mb-1 block">Description</Label>
               <Textarea
                 placeholder="Enter description"
                 value={formData.description}
-                onChange={(e) => handleChange('description', e.target.value)}
+                onChange={(e) => handleChange("description", e.target.value)}
+                rows={5}
               />
             </div>
           </div>
 
-          {/* Active Checkbox */}
-          <div className="flex items-center space-x-2">
-            <Checkbox
-              checked={formData.isActive}
-              onChange={(e) => handleChange('isActive', e.target.checked)}
-              id="isActive"
-            />
-            <Label htmlFor="isActive" className="mb-0">
-              Active
-            </Label>
+          {/* Active Toggle Switch */}
+          <div className="flex flex-col items-start gap-3">
+            <div className='flex items-center gap-4'>
+              <span className='text-black font-semibold'>{formData.isActive ? "Active" : "Inactive"}</span>
+              <ToggleSwitch
+                checked={formData.isActive}
+                onChange={(checked) => handleChange('isActive', checked)}
+              />
+            </div>
+            <p className="text-xs text-gray-500">
+              {formData.isActive ? (
+                <>
+                  <span className="text-red-600">*</span> When active is ON, the product will be visible to users.
+                </>
+              ) : (
+                "When inactive, the product will stay hidden from users."
+              )}
+            </p>
+
           </div>
 
-          {/* Submit */}
-          <div className="flex justify-end pt-2 sm:pt-4">
+          <div className="flex gap-2 justify-end pt-2 sm:pt-4">
+            {isEdit && (
+              <button
+                type="button"
+                onClick={() => {
+                  navigate('/products');
+                }}
+                className="px-4 py-2 rounded-md text-gray-700 hover:bg-gray-100 border border-gray-300 transition"
+              >
+                Cancel
+              </button>
+            )}
             <Button type="submit" color="primary" disabled={loading}>
               {loading ? 'Submitting...' : isEdit ? 'Update Product' : 'Create Product'}
             </Button>
