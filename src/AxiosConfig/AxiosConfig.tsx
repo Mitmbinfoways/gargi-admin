@@ -75,7 +75,7 @@ export const UpdateProduct = async (id: string, data: any) => {
     });
   }
 
-  return axiosInstance.put(`/api/v1/products/${id}`, formData, {
+  return axiosInstance.patch(`/api/v1/products/${id}`, formData, {
     headers: { 'Content-Type': 'multipart/form-data' },
   });
 };

@@ -12,12 +12,12 @@ const SidebarLayout = () => {
         className="fixed menu-sidebar bg-white dark:bg-darkgray rtl:pe-4 rtl:ps-0"
         aria-label="Sidebar with multi-level dropdown example"
       >
-        <div className="px-4 py-5 flex items-center justify-center">
+        <div className="p-4 py-5 flex items-center justify-start">
           <Link to="/">
-            <img alt="Logo" src={logo} className="w-full h-8" />
+            <img alt="Logo" src={logo} className="w-full h-10" />
           </Link>
         </div>
-        <SimpleBar className="h-[calc(100vh-80px)] py-5">
+        <SimpleBar className="h-[calc(100vh-80px)]">
           <Sidebar.Items>
             <Sidebar.ItemGroup className="sidebar-nav">
               {SidebarContent.map((section, index) => (

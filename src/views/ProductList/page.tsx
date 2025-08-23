@@ -61,17 +61,30 @@ const Page = () => {
 
   const handleToggle = async (id: string, checked: boolean) => {
     setData((prev) =>
-      prev.map((item) => (item._id === id ? { ...item, isActive: checked } : item))
+      prev.map((item) =>
+        item._id === id ? { ...item, isActive: checked } : item
+      )
     );
+
     try {
-      await UpdateProduct(id, { isActive: checked.toString() });
+      await UpdateProduct(id, { isActive: checked });
+
+      Toast({
+        message: `Product ${checked ? "activated" : "deactivated"} successfully`,
+        type: "success",
+      });
     } catch (error) {
-      console.error(error);
+      console.error("Error updating product:", error);
       setData((prev) =>
-        prev.map((item) => (item._id === id ? { ...item, isActive: !checked } : item))
+        prev.map((item) =>
+          item._id === id ? { ...item, isActive: !checked } : item
+        )
       );
+
+      Toast({ message: "Failed to update status", type: "error" });
     }
   };
+
 
   const handleLimitChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const newLimit = parseInt(e.target.value, 10);
@@ -106,7 +119,7 @@ const Page = () => {
               data.map((product, index) => (
                 <tr key={product._id}>
                   <td className="px-4 py-3 whitespace-nowrap">
-                    {(currentPage - 1) * limit + index + 1} 
+                    {(currentPage - 1) * limit + index + 1}
                   </td>
                   <td className="px-4 py-3 whitespace-nowrap">
                     {product.image?.[0] ? (
