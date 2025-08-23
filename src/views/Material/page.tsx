@@ -6,6 +6,7 @@ import DeleteDialog from "src/components/DeleteDialog";
 import useDebounce from "src/Hook/useDebounce";
 import { createMaterial, deleteMaterial, getAllMaterial, updateMaterial } from "src/AxiosConfig/AxiosConfig";
 import Pagination from "src/components/Pagination";
+import { IoSearchOutline } from "react-icons/io5";
 
 interface Material {
   _id: string;
@@ -218,6 +219,7 @@ const MaterialPage: React.FC = () => {
             placeholder="Search Material"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
+            icon={IoSearchOutline}
           />}
           <div className="w-full flex justify-end">
             <Button

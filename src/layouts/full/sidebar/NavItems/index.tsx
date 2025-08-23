@@ -23,8 +23,11 @@ const NavItems: React.FC<NavItemsProps> = ({ item }) => {
         label={item.name}
         icon={() => renderIcon(item.icon)}
         open={isChildActive}
-        className={`transition-colors duration-200 ${isChildActive ? 'bg-blue-100 text-blue-600 font-semibold' : 'text-gray-700'
-          }`}
+        className={`mx-2 transition-colors duration-200 ${
+          isChildActive
+            ? 'bg-blue-100 text-blue-600 font-semibold rounded-md'
+            : 'text-gray-700'
+        }`}
       >
         {item.children.map((child, index) => {
           const isChildSelected = location.pathname === child.url;
@@ -34,10 +37,11 @@ const NavItems: React.FC<NavItemsProps> = ({ item }) => {
               key={index}
               as={Link}
               to={child.url || '#'}
-              className={`pl-8 flex items-center transition-all duration-200 rounded-md ${isChildSelected
-                ? 'bg-blue-100 text-blue-600 font-semibold shadow-sm m'
-                : 'text-gray-600 hover:bg-gray-100 hover:text-blue-500'
-                }`}
+              className={`mx-2 pl-8 flex items-center transition-all duration-200 rounded-md ${
+                isChildSelected
+                  ? 'bg-blue-100 text-blue-600 font-semibold shadow-sm'
+                  : 'text-gray-600 hover:bg-gray-100 hover:text-blue-500'
+              }`}
             >
               <div className="flex items-center">
                 {renderIcon(child.icon, 16)}
@@ -55,10 +59,11 @@ const NavItems: React.FC<NavItemsProps> = ({ item }) => {
       as={Link}
       to={item.url || '#'}
       key={item.id}
-      className={`flex items-center transition-all duration-200 rounded-md ${isActive
-        ? 'bg-blue-100 text-blue-600 font-semibold '
-        : 'text-gray-700 hover:bg-gray-100 hover:text-blue-500'
-        }`}
+      className={`mx-2 flex items-center transition-all duration-200 rounded-md ${
+        isActive
+          ? 'bg-blue-100 text-blue-600 font-semibold'
+          : 'text-gray-700 hover:bg-gray-100 hover:text-blue-500'
+      }`}
     >
       <div className="flex items-center">
         {renderIcon(item.icon)}

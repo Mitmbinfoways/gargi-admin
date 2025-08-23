@@ -179,11 +179,10 @@ function Page() {
   }, []);
 
   return (
-    <div className="bg-white p-4 sm:p-6 rounded-lg shadow-md">
+    <div>
       <h1 className="text-xl sm:text-2xl font-bold mb-4 sm:mb-6 border-b pb-2">
         {isEdit ? 'Edit Product' : 'Create New Product'}
       </h1>
-
       {loading ? (
         <div className="bg-white rounded">
           <Spinner className="h-[60vh]" />
@@ -306,6 +305,7 @@ function Page() {
             <div className="flex-1">
               <Label className="mb-1 block">Description</Label>
               <Textarea
+                className='bg-white'
                 placeholder="Enter description"
                 value={formData.description}
                 onChange={(e) => handleChange("description", e.target.value)}

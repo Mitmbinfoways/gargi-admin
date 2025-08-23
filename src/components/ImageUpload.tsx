@@ -75,7 +75,7 @@ export default function ImageUpload({
 
       {/* Upload Section */}
       <div
-        className="border-2 border-dashed rounded-lg p-6 py-16 text-center flex flex-col justify-center cursor-pointer transition hover:bg-gray-50"
+        className="border-2 border-dashed rounded-lg p-6 py-16 text-center flex flex-col justify-center cursor-pointer transition hover:bg-gray-50 bg-white"
         onClick={() => fileInputRef.current?.click()}
         onDrop={handleDrop}
         onDragOver={handleDragOver}

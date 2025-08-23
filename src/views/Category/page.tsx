@@ -1,6 +1,7 @@
 import { Button, TextInput, ToggleSwitch, Spinner, Select } from "flowbite-react";
 import { useEffect, useState } from "react";
 import { MdDelete, MdModeEdit } from "react-icons/md";
+import { IoSearchOutline } from "react-icons/io5";
 import NoDataFound from "src/components/NoDataFound";
 import {
     getAllCategorys,
@@ -218,6 +219,7 @@ const Page: React.FC = () => {
                         placeholder="Search Category"
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
+                        icon={IoSearchOutline}
                     />}
                     <div className="w-full flex justify-end">
                         <Button

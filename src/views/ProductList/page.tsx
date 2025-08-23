@@ -1,28 +1,33 @@
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import NoDataFound from "src/components/NoDataFound";
 import { MdDelete, MdModeEdit } from "react-icons/md";
 import { deleteProduct, getProducts, UpdateProduct } from "src/AxiosConfig/AxiosConfig";
-import { Select, ToggleSwitch } from "flowbite-react";
+import { Button, Select, TextInput, ToggleSwitch } from "flowbite-react";
 import DeleteDialog from "src/components/DeleteDialog";
 import Pagination from "src/components/Pagination";
 import { Toast } from "src/components/Toast";
 import Spinner from "../../components/Spinner";
+import { IoSearchOutline } from "react-icons/io5";
+import useDebounce from "src/Hook/useDebounce";
 
 const Page = () => {
   const [loading, setLoading] = useState(false);
   const [data, setData] = useState<any[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
-  const [limit, setLimit] = useState(10); // ✅ NEW: limit state
+  const [limit, setLimit] = useState(10);
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
   const [deleteId, setDeleteId] = useState<string | null>(null);
+  const [searchTerm, setSearchTerm] = useState('')
+
+  const search = useDebounce(searchTerm, 300)
 
   const fetchData = async (page: number = 1, perPage: number = limit) => {
     setLoading(true);
     try {
-      const params = { page, limit: perPage }; // ✅ Pass dynamic limit
+      const params = { search, page, limit: perPage };
       const res = await getProducts(params);
       setData(res.data.data.products || []);
       setTotalPages(res.data.data.pagination.totalPages);
@@ -33,10 +38,9 @@ const Page = () => {
     }
   };
 
-  // ✅ Fetch data when page or limit changes
   useEffect(() => {
     fetchData(currentPage, limit);
-  }, [currentPage, limit]);
+  }, [search, currentPage, limit]);
 
   const handleEdit = (id: string) => {
     navigate("/create-product", { state: { id } });
@@ -65,7 +69,6 @@ const Page = () => {
         item._id === id ? { ...item, isActive: checked } : item
       )
     );
-
     try {
       await UpdateProduct(id, { isActive: checked });
 
@@ -80,21 +83,41 @@ const Page = () => {
           item._id === id ? { ...item, isActive: !checked } : item
         )
       );
-
       Toast({ message: "Failed to update status", type: "error" });
     }
   };
 
-
   const handleLimitChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const newLimit = parseInt(e.target.value, 10);
     setLimit(newLimit);
-    setCurrentPage(1); // ✅ Reset to page 1 when limit changes
+    setCurrentPage(1);
   };
 
   return (
     <div className="relative min-h-screen">
-      <h1 className="text-2xl font-bold mb-6">Products</h1>
+      <div className="mb-4 flex flex-col gap-3">
+        <h2 className="text-lg sm:text-xl font-semibold text-gray-700">Products</h2>
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 sm:gap-0">
+          <TextInput
+            className="w-full sm:w-1/3"
+            placeholder="Search Product"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            icon={IoSearchOutline}
+          />
+          <div className="w-full flex justify-end">
+            <Link to={"/create-product"}>
+              <Button
+                color="primary"
+                size="sm"
+                className="w-full sm:w-auto"
+              >
+                Create New Product
+              </Button>
+            </Link>
+          </div>
+        </div>
+      </div>
       <div className="bg-white shadow-md rounded-md overflow-x-auto">
         <table className="min-w-full text-sm text-left text-gray-700">
           <thead className="bg-gray-50 text-xs uppercase tracking-wider text-blue-800">

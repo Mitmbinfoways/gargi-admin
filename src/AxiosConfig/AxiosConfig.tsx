@@ -44,7 +44,7 @@ export const createProduct = async (data: any) => {
 };
 
 export const getProducts = async (data: any) => {
-  return axiosInstance.get(`/api/v1/products?page=${data.page}&limit=${data.limit}`);
+  return axiosInstance.get(`/api/v1/products?page=${data.page}&limit=${data.limit}&name=${data.search}`);
 };
 
 export const UpdateProduct = async (id: string, data: any) => {
