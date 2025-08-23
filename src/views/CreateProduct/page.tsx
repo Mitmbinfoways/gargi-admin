@@ -268,28 +268,29 @@ function Page() {
           </div>
 
           {/* Quantity */}
-          <div className="flex gap-6">
-            {/* Left Column */}
-            <div className="flex flex-col gap-4 w-1/2">
-              {/* Quantity Per Pack */}
+          <div className="flex flex-col sm:flex-row gap-6">
+            <div className="flex flex-col gap-4 w-full sm:w-1/2">
               <div>
-                <Label className="mb-1 block">
-                  Quantity Per Pack
-                </Label>
+                <Label className="mb-1 block">Quantity Per Pack</Label>
                 <TextInput
                   type="number"
                   placeholder="Enter quantity"
                   value={formData.quantityPerPack}
                   onChange={(e) => handleChange("quantityPerPack", e.target.value)}
                   onWheel={(e) => e.currentTarget.blur()}
+                  onKeyDown={(e) => {
+                    if (["e", "E", "+", "-"].includes(e.key)) {
+                      e.preventDefault();
+                    }
+                  }}
                   color={errors.quantityPerPack ? "failure" : undefined}
+                  className="w-full"
                 />
                 {errors.quantityPerPack && (
                   <p className="text-red-600 mt-1 text-sm">{errors.quantityPerPack}</p>
                 )}
               </div>
 
-              {/* Size Text Field */}
               <div>
                 <Label className="mb-1 block">Size</Label>
                 <TextInput
@@ -297,42 +298,38 @@ function Page() {
                   placeholder="Enter size"
                   value={formData.size}
                   onChange={(e) => handleChange("size", e.target.value)}
+                  className="w-full"
                 />
               </div>
+              <div className="flex flex-col items-start gap-3">
+                <div className='flex items-center gap-4'>
+                  <span className='text-black font-semibold'>{formData.isActive ? "Active" : "Inactive"}</span>
+                  <ToggleSwitch
+                    checked={formData.isActive}
+                    onChange={(checked) => handleChange('isActive', checked)}
+                  />
+                </div>
+                <p className="text-xs text-gray-500">
+                  {formData.isActive ? (
+                    <>
+                      <span className="text-red-600">*</span> When active is ON, the product will be visible to users.
+                    </>
+                  ) : (
+                    "When inactive, the product will stay hidden from users."
+                  )}
+                </p>
+              </div>
             </div>
-
-            {/* Right Column */}
-            <div className="flex-1">
+            <div className="w-full sm:flex-1">
               <Label className="mb-1 block">Description</Label>
               <Textarea
-                className='bg-white'
+                className="bg-white w-full"
                 placeholder="Enter description"
                 value={formData.description}
                 onChange={(e) => handleChange("description", e.target.value)}
                 rows={5}
               />
             </div>
-          </div>
-
-          {/* Active Toggle Switch */}
-          <div className="flex flex-col items-start gap-3">
-            <div className='flex items-center gap-4'>
-              <span className='text-black font-semibold'>{formData.isActive ? "Active" : "Inactive"}</span>
-              <ToggleSwitch
-                checked={formData.isActive}
-                onChange={(checked) => handleChange('isActive', checked)}
-              />
-            </div>
-            <p className="text-xs text-gray-500">
-              {formData.isActive ? (
-                <>
-                  <span className="text-red-600">*</span> When active is ON, the product will be visible to users.
-                </>
-              ) : (
-                "When inactive, the product will stay hidden from users."
-              )}
-            </p>
-
           </div>
 
           <div className="flex gap-2 justify-end pt-2 sm:pt-4">
