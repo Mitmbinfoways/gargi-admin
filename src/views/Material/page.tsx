@@ -341,7 +341,7 @@ const MaterialPage: React.FC = () => {
               totalPages={totalPages}
               onPageChange={(page) => setCurrentPage(page)}
             />
-            <div className="px-12">
+            <div className="sm:px-12">
               <Select value={limit} onChange={handleLimitChange}>
                 <option value="10">10</option>
                 <option value="15">15</option>

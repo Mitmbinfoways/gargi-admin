@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import NoDataFound from "src/components/NoDataFound";
 import { MdDelete, MdModeEdit } from "react-icons/md";
 import { deleteProduct, getProducts, UpdateProduct } from "src/AxiosConfig/AxiosConfig";
@@ -106,98 +106,99 @@ const Page = () => {
             icon={IoSearchOutline}
           />
           <div className="w-full flex justify-end">
-            <Link to={"/create-product"}>
-              <Button
-                color="primary"
-                size="sm"
-                className="w-full sm:w-auto"
-              >
-                Create New Product
-              </Button>
-            </Link>
+            <Button
+              color="primary"
+              size="sm"
+              className="w-full sm:w-auto"
+              onClick={() => navigate("/create-product")}
+            >
+              Create New Product
+            </Button>
           </div>
         </div>
       </div>
-      <div className="bg-white shadow-md rounded-md overflow-x-auto">
-        <table className="min-w-full text-sm text-left text-gray-700">
-          <thead className="bg-gray-50 text-xs uppercase tracking-wider text-blue-800">
-            <tr>
-              <th className="px-4 py-3">Index</th>
-              <th className="px-4 py-3">Image</th>
-              <th className="px-4 py-3">Name</th>
-              <th className="px-4 py-3">Category</th>
-              <th className="px-4 py-3">Material</th>
-              <th className="px-4 py-3">Quantity</th>
-              <th className="px-4 py-3">Actions</th>
-            </tr>
-          </thead>
-          <tbody className="bg-white divide-y divide-gray-200">
-            {loading ? (
+      <div className="bg-white shadow-md rounded-md ">
+        <div className="overflow-x-auto">
+          <table className="min-w-full text-sm text-left text-gray-700">
+            <thead className="bg-gray-50 text-xs uppercase tracking-wider text-blue-800">
               <tr>
-                <td colSpan={8} className="text-center py-4">
-                  <Spinner className="h-[60vh]" />
-                </td>
+                <th className="px-4 py-3">Index</th>
+                <th className="px-4 py-3">Image</th>
+                <th className="px-4 py-3">Name</th>
+                <th className="px-4 py-3">Category</th>
+                <th className="px-4 py-3">Material</th>
+                <th className="px-4 py-3">Quantity</th>
+                <th className="px-4 py-3">Actions</th>
               </tr>
-            ) : data.length > 0 ? (
-              data.map((product, index) => (
-                <tr key={product._id}>
-                  <td className="px-4 py-3 whitespace-nowrap">
-                    {(currentPage - 1) * limit + index + 1}
-                  </td>
-                  <td className="px-4 py-3 whitespace-nowrap">
-                    {product.image?.[0] ? (
-                      <img
-                        src={product.image[0]}
-                        alt={product.name}
-                        className="h-10 w-10 object-cover rounded"
-                        onError={(e) => {
-                          (e.target as HTMLImageElement).src = "/fallback-image.jpg";
-                        }}
-                      />
-                    ) : (
-                      <span className="text-xs text-gray-400">No Image</span>
-                    )}
-                  </td>
-                  <td className="px-4 py-3 whitespace-nowrap">{product.name}</td>
-                  <td className="px-4 py-3 whitespace-nowrap">{product.category}</td>
-                  <td className="px-4 py-3 whitespace-nowrap">{product.material}</td>
-                  <td className="px-4 py-3 whitespace-nowrap max-w-xs truncate">
-                    {product.quantityPerPack || "—"}
-                  </td>
-                  <td className="px-4 py-3 whitespace-nowrap">
-                    <div className="flex gap-3 items-center">
-                      <MdModeEdit
-                        size={18}
-                        className="cursor-pointer"
-                        title="Edit"
-                        onClick={() => handleEdit(product._id)}
-                      />
-                      <MdDelete
-                        size={18}
-                        className="text-red-600 cursor-pointer"
-                        title="Delete"
-                        onClick={() => {
-                          setDeleteId(product._id);
-                          setOpen(true);
-                        }}
-                      />
-                      <ToggleSwitch
-                        checked={String(product.isActive).toLowerCase() === "true"}
-                        onChange={(checked) => handleToggle(product._id, checked)}
-                      />
-                    </div>
+            </thead>
+            <tbody className="bg-white divide-y divide-gray-200">
+              {loading ? (
+                <tr>
+                  <td colSpan={8} className="text-center py-4">
+                    <Spinner className="h-[60vh]" />
                   </td>
                 </tr>
-              ))
-            ) : (
-              <tr>
-                <td colSpan={8}>
-                  <NoDataFound />
-                </td>
-              </tr>
-            )}
-          </tbody>
-        </table>
+              ) : data.length > 0 ? (
+                data.map((product, index) => (
+                  <tr key={product._id}>
+                    <td className="px-4 py-3 whitespace-nowrap">
+                      {(currentPage - 1) * limit + index + 1}
+                    </td>
+                    <td className="px-4 py-3 whitespace-nowrap">
+                      {product.image?.[0] ? (
+                        <img
+                          src={product.image[0]}
+                          alt={product.name}
+                          className="h-10 w-10 object-cover rounded"
+                          onError={(e) => {
+                            (e.target as HTMLImageElement).src = "/fallback-image.jpg";
+                          }}
+                        />
+                      ) : (
+                        <span className="text-xs text-gray-400">No Image</span>
+                      )}
+                    </td>
+                    <td className="px-4 py-3 whitespace-nowrap">{product.name}</td>
+                    <td className="px-4 py-3 whitespace-nowrap">{product.category}</td>
+                    <td className="px-4 py-3 whitespace-nowrap">{product.material}</td>
+                    <td className="px-4 py-3 whitespace-nowrap max-w-xs truncate">
+                      {product.quantityPerPack || "—"}
+                    </td>
+                    <td className="px-4 py-3 whitespace-nowrap">
+                      <div className="flex gap-3 items-center">
+                        <MdModeEdit
+                          size={18}
+                          className="cursor-pointer"
+                          title="Edit"
+                          onClick={() => handleEdit(product._id)}
+                        />
+                        <MdDelete
+                          size={18}
+                          className="text-red-600 cursor-pointer"
+                          title="Delete"
+                          onClick={() => {
+                            setDeleteId(product._id);
+                            setOpen(true);
+                          }}
+                        />
+                        <ToggleSwitch
+                          checked={String(product.isActive).toLowerCase() === "true"}
+                          onChange={(checked) => handleToggle(product._id, checked)}
+                        />
+                      </div>
+                    </td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td colSpan={8}>
+                    <NoDataFound />
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+        </div>
 
         <div className="flex justify-between items-center p-4">
           <div />
@@ -206,7 +207,7 @@ const Page = () => {
             totalPages={totalPages}
             onPageChange={(page) => setCurrentPage(page)}
           />
-          <div className="px-12">
+          <div className="sm:px-12">
             <Select value={limit} onChange={handleLimitChange}>
               <option value="10">10</option>
               <option value="15">15</option>
@@ -217,17 +218,19 @@ const Page = () => {
         </div>
       </div>
 
-      {deleteId && (
-        <DeleteDialog
-          isOpen={open}
-          onDelete={() => handleDelete(deleteId)}
-          onCancel={() => {
-            setOpen(false);
-            setDeleteId(null);
-          }}
-        />
-      )}
-    </div>
+      {
+        deleteId && (
+          <DeleteDialog
+            isOpen={open}
+            onDelete={() => handleDelete(deleteId)}
+            onCancel={() => {
+              setOpen(false);
+              setDeleteId(null);
+            }}
+          />
+        )
+      }
+    </div >
   );
 };
 
